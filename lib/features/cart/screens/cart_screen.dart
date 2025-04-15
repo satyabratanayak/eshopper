@@ -125,7 +125,7 @@ class _CartScreenState extends State<CartScreen> {
             ),
             const SizedBox(height: 15),
             Container(
-              color: Colors.black12.withOpacity(0.08),
+              color: Colors.black12.withValues(alpha: 0.08),
               height: 1,
             ),
             const SizedBox(height: 5),

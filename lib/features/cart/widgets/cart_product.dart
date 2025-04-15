@@ -8,9 +8,9 @@ import 'package:provider/provider.dart';
 class CartProduct extends StatefulWidget {
   final int index;
   const CartProduct({
-    Key? key,
+    super.key,
     required this.index,
-  }) : super(key: key);
+  });
 
   @override
   State<CartProduct> createState() => _CartProductState();

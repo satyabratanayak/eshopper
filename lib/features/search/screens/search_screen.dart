@@ -11,9 +11,9 @@ class SearchScreen extends StatefulWidget {
   static const String routeName = '/search-screen';
   final String searchQuery;
   const SearchScreen({
-    Key? key,
+    super.key,
     required this.searchQuery,
-  }) : super(key: key);
+  });
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();

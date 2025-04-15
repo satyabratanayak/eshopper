@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:eshopper/common/widgets/loader.dart';
 import 'package:eshopper/features/home/services/home_services.dart';
 import 'package:eshopper/features/product_details/screens/product_details_screen.dart';
@@ -14,40 +12,16 @@ class DealOfDay extends StatefulWidget {
 }
 
 class _DealOfDayState extends State<DealOfDay> {
-  Product? product;
+  Product product = Product.empty();
   List<Product> products = [];
   final HomeServices homeServices = HomeServices();
-
-  @override
-  void initState() {
-    super.initState();
-    fetchDealOfDay();
-  }
-
-  void fetchDealOfDay() async {
-    product = await homeServices.fetchDealOfDay(context: context);
-    setState(() {});
-  }
-
-  void fetchAllProducts() async {
-    products = await homeServices.fetchAllProducts(context: context);
-    setState(() {});
-    log("Products List: ${products.length}");
-  }
-
-  void navigateToDetailScreen() {
-    Navigator.pushNamed(
-      context,
-      ProductDetailScreen.routeName,
-      arguments: product,
-    );
-  }
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    return product == null
-        ? const Loader()
-        : product!.name.isEmpty
+    return isLoading
+        ? Loader()
+        : product.name.isEmpty
             ? const SizedBox()
             : GestureDetector(
                 onTap: navigateToDetailScreen,
@@ -62,7 +36,7 @@ class _DealOfDayState extends State<DealOfDay> {
                       ),
                     ),
                     Image.network(
-                      product!.images[0],
+                      product.images[0],
                       height: 235,
                       fit: BoxFit.fitHeight,
                     ),
@@ -70,7 +44,7 @@ class _DealOfDayState extends State<DealOfDay> {
                       padding: const EdgeInsets.only(left: 15),
                       alignment: Alignment.topLeft,
                       child: Text(
-                        '₹${product!.price}',
+                        '₹${product.price}',
                         style: TextStyle(fontSize: 18),
                       ),
                     ),
@@ -79,7 +53,7 @@ class _DealOfDayState extends State<DealOfDay> {
                       padding:
                           const EdgeInsets.only(left: 15, top: 5, right: 40),
                       child: Text(
-                        product!.name,
+                        product.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -88,7 +62,7 @@ class _DealOfDayState extends State<DealOfDay> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: product!.images
+                        children: product.images
                             .map(
                               (e) => Image.network(
                                 e,
@@ -136,5 +110,39 @@ class _DealOfDayState extends State<DealOfDay> {
                   ],
                 ),
               );
+  }
+
+  void fetchAllProducts() async {
+    setState(() {
+      isLoading = true;
+    });
+    products = await homeServices.fetchAllProducts(context: context);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void fetchDealOfDay() async {
+    setState(() {
+      isLoading = true;
+    });
+    product = await homeServices.fetchDealOfDay(context: context);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDealOfDay();
+  }
+
+  void navigateToDetailScreen() {
+    Navigator.pushNamed(
+      context,
+      arguments: product,
+      ProductDetailScreen.routeName,
+    );
   }
 }

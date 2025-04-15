@@ -4,6 +4,7 @@ import 'package:eshopper/constants/utils.dart';
 import 'package:eshopper/features/address/services/address_services.dart';
 import 'package:eshopper/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
 
@@ -25,83 +26,12 @@ class _AddressScreenState extends State<AddressScreen> {
   final TextEditingController pincodeController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final _addressFormKey = GlobalKey<FormState>();
+  PaymentConfiguration? _applePayConfig;
+  PaymentConfiguration? _gogglePayConfig;
 
   String addressToBeUsed = "";
   List<PaymentItem> paymentItems = [];
   final AddressServices addressServices = AddressServices();
-
-  @override
-  void initState() {
-    super.initState();
-    paymentItems.add(
-      PaymentItem(
-        amount: widget.totalAmount,
-        label: 'Total Amount',
-        status: PaymentItemStatus.final_price,
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    flatBuildingController.dispose();
-    areaController.dispose();
-    pincodeController.dispose();
-    cityController.dispose();
-  }
-
-  void onApplePayResult(res) {
-    if (Provider.of<UserProvider>(context, listen: false)
-        .user
-        .address
-        .isEmpty) {
-      addressServices.saveUserAddress(
-          context: context, address: addressToBeUsed);
-    }
-    addressServices.placeOrder(
-      context: context,
-      address: addressToBeUsed,
-      totalSum: double.parse(widget.totalAmount),
-    );
-  }
-
-  void onGooglePayResult(res) {
-    if (Provider.of<UserProvider>(context, listen: false)
-        .user
-        .address
-        .isEmpty) {
-      addressServices.saveUserAddress(
-          context: context, address: addressToBeUsed);
-    }
-    addressServices.placeOrder(
-      context: context,
-      address: addressToBeUsed,
-      totalSum: double.parse(widget.totalAmount),
-    );
-  }
-
-  void payPressed(String addressFromProvider) {
-    addressToBeUsed = "";
-
-    bool isForm = flatBuildingController.text.isNotEmpty ||
-        areaController.text.isNotEmpty ||
-        pincodeController.text.isNotEmpty ||
-        cityController.text.isNotEmpty;
-
-    if (isForm) {
-      if (_addressFormKey.currentState!.validate()) {
-        addressToBeUsed =
-            '${flatBuildingController.text}, ${areaController.text}, ${cityController.text} - ${pincodeController.text}';
-      } else {
-        throw Exception('Please enter all the values!');
-      }
-    } else if (addressFromProvider.isNotEmpty) {
-      addressToBeUsed = addressFromProvider;
-    } else {
-      showGlobalSnackBar('ERROR');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,35 +110,123 @@ class _AddressScreenState extends State<AddressScreen> {
                   ],
                 ),
               ),
-              ApplePayButton(
-                width: double.infinity,
-                style: ApplePayButtonStyle.whiteOutline,
-                type: ApplePayButtonType.buy,
-                paymentConfigurationAsset: 'applepay.json',
-                onPaymentResult: onApplePayResult,
-                paymentItems: paymentItems,
-                margin: const EdgeInsets.only(top: 15),
-                height: 50,
-                onPressed: () => payPressed(address),
-              ),
-              const SizedBox(height: 10),
-              GooglePayButton(
-                onPressed: () => payPressed(address),
-                paymentConfigurationAsset: 'gpay.json',
-                onPaymentResult: onGooglePayResult,
-                paymentItems: paymentItems,
-                height: 50,
-                // style: GooglePayButtonStyle.black,
-                type: GooglePayButtonType.buy,
-                margin: const EdgeInsets.only(top: 15),
-                loadingIndicator: const Center(
-                  child: CircularProgressIndicator(),
+              if (_applePayConfig != null)
+                ApplePayButton(
+                  height: 50,
+                  onPressed: () => payPressed(address),
+                  paymentConfiguration: _applePayConfig!,
+                  onPaymentResult: onApplePayResult,
+                  paymentItems: paymentItems,
+                  type: ApplePayButtonType.buy,
+                  margin: const EdgeInsets.only(top: 15),
+                  style: ApplePayButtonStyle.whiteOutline,
                 ),
-              ),
+              const SizedBox(height: 10),
+              if (_gogglePayConfig != null)
+                GooglePayButton(
+                  height: 50,
+                  onPressed: () => payPressed(address),
+                  paymentConfiguration: _gogglePayConfig,
+                  onPaymentResult: onGooglePayResult,
+                  paymentItems: paymentItems,
+                  type: GooglePayButtonType.buy,
+                  margin: const EdgeInsets.only(top: 15),
+                  loadingIndicator: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    flatBuildingController.dispose();
+    areaController.dispose();
+    pincodeController.dispose();
+    cityController.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    paymentItems.add(
+      PaymentItem(
+        amount: widget.totalAmount,
+        label: 'Total Amount',
+        status: PaymentItemStatus.final_price,
+      ),
+    );
+    // Load Apple Pay config
+    rootBundle.loadString('assets/applepay.json').then((jsonString) {
+      final applePayConfig = PaymentConfiguration.fromJsonString(jsonString);
+      setState(() {
+        _applePayConfig = applePayConfig;
+      });
+    });
+
+    // Load Google Pay config
+    rootBundle.loadString('assets/gpay.json').then((jsonString) {
+      final googlePayConfig = PaymentConfiguration.fromJsonString(jsonString);
+      setState(() {
+        _gogglePayConfig = googlePayConfig;
+      });
+    });
+  }
+
+  void onApplePayResult(res) {
+    if (Provider.of<UserProvider>(context, listen: false)
+        .user
+        .address
+        .isEmpty) {
+      addressServices.saveUserAddress(
+          context: context, address: addressToBeUsed);
+    }
+    addressServices.placeOrder(
+      context: context,
+      address: addressToBeUsed,
+      totalSum: double.parse(widget.totalAmount),
+    );
+  }
+
+  void onGooglePayResult(res) {
+    if (Provider.of<UserProvider>(context, listen: false)
+        .user
+        .address
+        .isEmpty) {
+      addressServices.saveUserAddress(
+          context: context, address: addressToBeUsed);
+    }
+    addressServices.placeOrder(
+      context: context,
+      address: addressToBeUsed,
+      totalSum: double.parse(widget.totalAmount),
+    );
+  }
+
+  void payPressed(String addressFromProvider) {
+    addressToBeUsed = "";
+
+    bool isForm = flatBuildingController.text.isNotEmpty ||
+        areaController.text.isNotEmpty ||
+        pincodeController.text.isNotEmpty ||
+        cityController.text.isNotEmpty;
+
+    if (isForm) {
+      if (_addressFormKey.currentState!.validate()) {
+        addressToBeUsed =
+            '${flatBuildingController.text}, ${areaController.text}, ${cityController.text} - ${pincodeController.text}';
+      } else {
+        throw Exception('Please enter all the values!');
+      }
+    } else if (addressFromProvider.isNotEmpty) {
+      addressToBeUsed = addressFromProvider;
+    } else {
+      showGlobalSnackBar('ERROR');
+    }
   }
 }

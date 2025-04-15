@@ -3,7 +3,7 @@ import 'package:eshopper/constants/global_variables.dart';
 import 'package:flutter/material.dart';
 
 class CarouselImage extends StatelessWidget {
-  const CarouselImage({Key? key}) : super(key: key);
+  const CarouselImage({super.key});
 
   @override
   Widget build(BuildContext context) {

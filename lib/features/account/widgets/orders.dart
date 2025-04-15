@@ -7,7 +7,7 @@ import 'package:eshopper/models/order.dart';
 import 'package:flutter/material.dart';
 
 class Orders extends StatefulWidget {
-  const Orders({Key? key}) : super(key: key);
+  const Orders({super.key});
 
   @override
   State<Orders> createState() => _OrdersState();
@@ -18,9 +18,78 @@ class _OrdersState extends State<Orders> {
   final AccountServices accountServices = AccountServices();
 
   @override
-  void initState() {
-    super.initState();
-    fetchOrders();
+  Widget build(BuildContext context) {
+    if (orders == null) {
+      return const Loader(); // Still loading
+    }
+
+    if (orders!.isEmpty) {
+      return const Center(
+        child: Text(
+          "You have no orders yet.",
+          style: TextStyle(fontSize: 16),
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        // Header
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Your Orders',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                'See all',
+                style: TextStyle(
+                  color: GlobalVariables.selectedNavBarColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+
+        // Order List
+        SizedBox(
+          height: 170,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: orders!.length,
+            itemBuilder: (context, index) {
+              final order = orders![index];
+              final products = order.products;
+              String? image;
+              if (products.isNotEmpty && products[0].images.isNotEmpty) {
+                image = products[0].images[0];
+              }
+
+              return GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    OrderDetailScreen.routeName,
+                    arguments: order,
+                  );
+                },
+                child: SingleProduct(
+                  image: image ??
+                      'https://karanzi.websites.co.in/obaju-turquoise/img/product-placeholder.png',
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   void fetchOrders() async {
@@ -29,67 +98,8 @@ class _OrdersState extends State<Orders> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return orders == null
-        ? const Loader()
-        : Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(
-                      left: 15,
-                    ),
-                    child: const Text(
-                      'Your Orders',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(
-                      right: 15,
-                    ),
-                    child: Text(
-                      'See all',
-                      style: TextStyle(
-                        color: GlobalVariables.selectedNavBarColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              // display orders
-              Container(
-                height: 170,
-                padding: const EdgeInsets.only(
-                  left: 10,
-                  top: 20,
-                  right: 0,
-                ),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: orders!.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          OrderDetailScreen.routeName,
-                          arguments: orders![index],
-                        );
-                      },
-                      child: SingleProduct(
-                        image: orders![index].products[0].images[0],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
+  void initState() {
+    super.initState();
+    fetchOrders();
   }
 }

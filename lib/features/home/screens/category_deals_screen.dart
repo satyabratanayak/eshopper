@@ -9,31 +9,17 @@ class CategoryDealsScreen extends StatefulWidget {
   static const String routeName = '/category-deals';
   final String category;
   const CategoryDealsScreen({
-    Key? key,
+    super.key,
     required this.category,
-  }) : super(key: key);
+  });
 
   @override
   State<CategoryDealsScreen> createState() => _CategoryDealsScreenState();
 }
 
 class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
-  List<Product>? productList;
+  List<Product> productList = [];
   final HomeServices homeServices = HomeServices();
-
-  @override
-  void initState() {
-    super.initState();
-    fetchCategoryProducts();
-  }
-
-  fetchCategoryProducts() async {
-    productList = await homeServices.fetchCategoryProducts(
-      context: context,
-      category: widget.category,
-    );
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +40,7 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
           ),
         ),
       ),
-      body: productList == null
+      body: productList.isEmpty
           ? const Loader()
           : Column(
               children: [
@@ -74,7 +60,7 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                   child: GridView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.only(left: 15),
-                    itemCount: productList!.length,
+                    itemCount: productList.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1,
@@ -82,7 +68,7 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                       mainAxisSpacing: 10,
                     ),
                     itemBuilder: (context, index) {
-                      final product = productList![index];
+                      final product = productList[index];
                       return GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(
@@ -132,5 +118,19 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
               ],
             ),
     );
+  }
+
+  fetchCategoryProducts() async {
+    productList = await homeServices.fetchCategoryProducts(
+      context: context,
+      category: widget.category,
+    );
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCategoryProducts();
   }
 }

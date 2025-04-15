@@ -19,19 +19,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   List<Sales>? earnings;
 
   @override
-  void initState() {
-    super.initState();
-    getEarnings();
-  }
-
-  getEarnings() async {
-    var earningData = await adminServices.getEarnings(context);
-    totalSales = earningData['totalEarnings'];
-    earnings = earningData['sales'];
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
     return earnings == null || totalSales == null
         ? const Loader()
@@ -49,7 +36,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 const SizedBox(height: 20),
                 SizedBox(
                   height: 250,
-                  child: CategoryProductsChart(salesData: earnings!),
+                  child: CategoryProductsChart(salesData: earnings ?? []),
                 ),
                 AccountButton(
                   text: 'Log Out',
@@ -58,5 +45,18 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               ],
             ),
           );
+  }
+
+  getEarnings() async {
+    var earningData = await adminServices.getEarnings(context);
+    totalSales = earningData['totalEarnings'];
+    earnings = earningData['sales'];
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getEarnings();
   }
 }

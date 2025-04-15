@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 class CategoryProductsChart extends StatelessWidget {
   final List<Sales> salesData;
 
-  const CategoryProductsChart({Key? key, required this.salesData})
-      : super(key: key);
+  const CategoryProductsChart({super.key, required this.salesData});
 
   @override
   Widget build(BuildContext context) {

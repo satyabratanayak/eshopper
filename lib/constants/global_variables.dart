@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 
-String uri = 'http://192.168.1.14:5001';
+String uri = 'http://192.168.1.6:5001';
+
+class Category {
+  final String title;
+  final String image;
+
+  const Category({
+    required this.title,
+    required this.image,
+  });
+}
 
 class GlobalVariables {
   // COLORS
@@ -14,8 +24,8 @@ class GlobalVariables {
 
   static const secondaryColor = Color.fromRGBO(255, 153, 0, 1);
   static const backgroundColor = Colors.white;
-  static const Color greyBackgroundCOlor = Color(0xffebecee);
-  static var selectedNavBarColor = Colors.cyan[800]!;
+  static const greyBackgroundCOlor = Color(0xffebecee);
+  static const selectedNavBarColor = Color(0xFF00838F);
   static const unselectedNavBarColor = Colors.black87;
 
   // STATIC IMAGES
@@ -27,26 +37,26 @@ class GlobalVariables {
     'https://images-na.ssl-images-amazon.com/images/G/31/img21/shoes/September/SSW/pc-header._CB641971330_.jpg',
   ];
 
-  static const List<Map<String, String>> categoryImages = [
-    {
-      'title': 'Mobiles',
-      'image': 'assets/images/mobiles.jpeg',
-    },
-    {
-      'title': 'Essentials',
-      'image': 'assets/images/essentials.jpeg',
-    },
-    {
-      'title': 'Appliances',
-      'image': 'assets/images/appliances.jpeg',
-    },
-    {
-      'title': 'Books',
-      'image': 'assets/images/books.jpeg',
-    },
-    {
-      'title': 'Fashion',
-      'image': 'assets/images/fashion.jpeg',
-    },
+  static const List<Category> categoryList = [
+    Category(
+      title: 'Mobiles',
+      image: 'assets/images/mobiles.jpeg',
+    ),
+    Category(
+      title: 'Essentials',
+      image: 'assets/images/essentials.jpeg',
+    ),
+    Category(
+      title: 'Appliances',
+      image: 'assets/images/appliances.jpeg',
+    ),
+    Category(
+      title: 'Books',
+      image: 'assets/images/books.jpeg',
+    ),
+    Category(
+      title: 'Fashion',
+      image: 'assets/images/fashion.jpeg',
+    ),
   ];
 }

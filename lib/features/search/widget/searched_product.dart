@@ -5,19 +5,17 @@ import 'package:flutter/material.dart';
 class SearchedProduct extends StatelessWidget {
   final Product product;
   const SearchedProduct({
-    Key? key,
+    super.key,
     required this.product,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    double totalRating = 0;
-    for (int i = 0; i < product.rating!.length; i++) {
-      totalRating += product.rating![i].rating;
-    }
     double avgRating = 0;
-    if (totalRating != 0) {
-      avgRating = totalRating / product.rating!.length;
+
+    if (product.rating.isNotEmpty) {
+      avgRating = product.rating.map((r) => r.rating).reduce((a, b) => a + b) /
+          product.rating.length;
     }
     return Column(
       children: [

@@ -179,7 +179,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     }).toList(),
                     onChanged: (String? newVal) {
                       setState(() {
-                        category = newVal!;
+                        if (newVal != null && newVal.isNotEmpty) {
+                          category = newVal;
+                        }
                       });
                     },
                   ),

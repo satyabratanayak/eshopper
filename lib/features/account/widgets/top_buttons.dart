@@ -3,7 +3,7 @@ import 'package:eshopper/features/account/widgets/account_button.dart';
 import 'package:flutter/material.dart';
 
 class TopButtons extends StatelessWidget {
-  const TopButtons({Key? key}) : super(key: key);
+  const TopButtons({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -27,31 +27,6 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _nameController = TextEditingController();
 
   @override
-  void dispose() {
-    super.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _nameController.dispose();
-  }
-
-  void signUpUser() {
-    authService.signUpUser(
-      context: context,
-      email: _emailController.text,
-      password: _passwordController.text,
-      name: _nameController.text,
-    );
-  }
-
-  void signInUser() {
-    authService.signInUser(
-      context: context,
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: GlobalVariables.greyBackgroundCOlor,
@@ -83,8 +58,9 @@ class _AuthScreenState extends State<AuthScreen> {
                   value: Auth.signup,
                   groupValue: _auth,
                   onChanged: (Auth? val) {
+                    if (val == null) return;
                     setState(() {
-                      _auth = val!;
+                      _auth = val;
                     });
                   },
                 ),
@@ -140,8 +116,9 @@ class _AuthScreenState extends State<AuthScreen> {
                   value: Auth.signin,
                   groupValue: _auth,
                   onChanged: (Auth? val) {
+                    if (val == null) return;
                     setState(() {
-                      _auth = val!;
+                      _auth = val;
                     });
                   },
                 ),
@@ -181,6 +158,31 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _nameController.dispose();
+  }
+
+  void signInUser() {
+    authService.signInUser(
+      context: context,
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+  }
+
+  void signUpUser() {
+    authService.signUpUser(
+      context: context,
+      email: _emailController.text,
+      password: _passwordController.text,
+      name: _nameController.text,
     );
   }
 }

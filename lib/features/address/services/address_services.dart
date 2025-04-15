@@ -17,32 +17,32 @@ class AddressServices {
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    try {
-      http.Response res = await http.post(
-        Uri.parse('$uri/api/save-user-address'),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-auth-token': userProvider.user.token,
-        },
-        body: jsonEncode({
-          'address': address,
-        }),
-      );
+    // try {
+    http.Response res = await http.post(
+      Uri.parse('$uri/api/save-user-address'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': userProvider.user.token,
+      },
+      body: jsonEncode({
+        'address': address,
+      }),
+    );
+    if (!context.mounted) return;
+    httpErrorHandle(
+      response: res,
+      context: context,
+      onSuccess: () {
+        User user = userProvider.user.copyWith(
+          address: jsonDecode(res.body)['address'],
+        );
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          User user = userProvider.user.copyWith(
-            address: jsonDecode(res.body)['address'],
-          );
-
-          userProvider.setUserFromModel(user);
-        },
-      );
-    } catch (e) {
-      showGlobalSnackBar(e.toString());
-    }
+        userProvider.setUserFromModel(user);
+      },
+    );
+    // } catch (e) {
+    //   showGlobalSnackBar(e.toString());
+    // }
   }
 
   // get all the products
@@ -53,32 +53,32 @@ class AddressServices {
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    try {
-      http.Response res = await http.post(Uri.parse('$uri/api/order'),
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'x-auth-token': userProvider.user.token,
-          },
-          body: jsonEncode({
-            'cart': userProvider.user.cart,
-            'address': address,
-            'totalPrice': totalSum,
-          }));
-
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showGlobalSnackBar('Your order has been placed!');
-          User user = userProvider.user.copyWith(
-            cart: [],
-          );
-          userProvider.setUserFromModel(user);
+    // try {
+    http.Response res = await http.post(Uri.parse('$uri/api/order'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
         },
-      );
-    } catch (e) {
-      showGlobalSnackBar(e.toString());
-    }
+        body: jsonEncode({
+          'cart': userProvider.user.cart,
+          'address': address,
+          'totalPrice': totalSum,
+        }));
+    if (!context.mounted) return;
+    httpErrorHandle(
+      response: res,
+      context: context,
+      onSuccess: () {
+        showGlobalSnackBar('Your order has been placed!');
+        User user = userProvider.user.copyWith(
+          cart: [],
+        );
+        userProvider.setUserFromModel(user);
+      },
+    );
+    // } catch (e) {
+    //   showGlobalSnackBar(e.toString());
+    // }
   }
 
   void deleteProduct({
@@ -88,27 +88,27 @@ class AddressServices {
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    try {
-      http.Response res = await http.post(
-        Uri.parse('$uri/admin/delete-product'),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-auth-token': userProvider.user.token,
-        },
-        body: jsonEncode({
-          'id': product.id,
-        }),
-      );
-
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          onSuccess();
-        },
-      );
-    } catch (e) {
-      showGlobalSnackBar(e.toString());
-    }
+    // try {
+    http.Response res = await http.post(
+      Uri.parse('$uri/admin/delete-product'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': userProvider.user.token,
+      },
+      body: jsonEncode({
+        'id': product.id,
+      }),
+    );
+    if (!context.mounted) return;
+    httpErrorHandle(
+      response: res,
+      context: context,
+      onSuccess: () {
+        onSuccess();
+      },
+    );
+    // } catch (e) {
+    //   showGlobalSnackBar(e.toString());
+    // }
   }
 }
