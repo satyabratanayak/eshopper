@@ -8,12 +8,7 @@ class Rating {
     required this.rating,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'rating': rating,
-    };
-  }
+  factory Rating.fromJson(String source) => Rating.fromMap(json.decode(source));
 
   factory Rating.fromMap(Map<String, dynamic> map) {
     return Rating(
@@ -24,5 +19,10 @@ class Rating {
 
   String toJson() => json.encode(toMap());
 
-  factory Rating.fromJson(String source) => Rating.fromMap(json.decode(source));
+  Map<String, dynamic> toMap() {
+    return {
+      'userId': userId,
+      'rating': rating,
+    };
+  }
 }

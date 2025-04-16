@@ -1,3 +1,4 @@
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/account/services/account_services.dart';
 import 'package:eshopper/features/account/widgets/account_button.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +13,11 @@ class TopButtons extends StatelessWidget {
         Row(
           children: [
             AccountButton(
-              text: 'Your Orders',
+              text: StringConstants.yourOrders,
               onTap: () {},
             ),
             AccountButton(
-              text: 'Turn Seller',
+              text: StringConstants.applyForSeller,
               onTap: () {},
             ),
           ],
@@ -25,11 +26,11 @@ class TopButtons extends StatelessWidget {
         Row(
           children: [
             AccountButton(
-              text: 'Log Out',
+              text: StringConstants.logOut,
               onTap: () => AccountServices().logOut(context),
             ),
             AccountButton(
-              text: 'Your Wish List',
+              text: StringConstants.wishlist,
               onTap: () {},
             ),
           ],

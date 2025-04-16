@@ -1,4 +1,5 @@
 import 'package:eshopper/common/widgets/loader.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/account/services/account_services.dart';
 import 'package:eshopper/features/account/widgets/account_button.dart';
 import 'package:eshopper/features/admin/models/sales.dart';
@@ -39,7 +40,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   child: CategoryProductsChart(salesData: earnings ?? []),
                 ),
                 AccountButton(
-                  text: 'Log Out',
+                  text: StringConstants.logOut,
                   onTap: () => AccountServices().logOut(context),
                 ),
               ],

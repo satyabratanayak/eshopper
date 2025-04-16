@@ -1,3 +1,4 @@
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -27,7 +28,7 @@ class CustomTextField extends StatelessWidget {
           ))),
       validator: (val) {
         if (val == null || val.isEmpty) {
-          return 'Enter your $hintText';
+          return '${StringConstants.enterYour} $hintText';
         }
         return null;
       },

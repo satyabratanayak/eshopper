@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eshopper/common/widgets/custom_button.dart';
 import 'package:eshopper/common/widgets/stars.dart';
 import 'package:eshopper/constants/global_variables.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/product_details/services/product_details_services.dart';
 import 'package:eshopper/features/search/screens/search_screen.dart';
 import 'package:eshopper/models/product.dart';
@@ -90,7 +91,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             width: 1,
                           ),
                         ),
-                        hintText: 'Search Amazon.in',
+                        hintText: StringConstants.search,
                         hintStyle: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 17,
@@ -119,12 +120,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    widget.product.id,
-                  ),
-                  Stars(
-                    rating: avgRating,
-                  ),
+                  Text(widget.product.id),
+                  Stars(rating: avgRating),
                 ],
               ),
             ),
@@ -165,7 +162,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               padding: const EdgeInsets.all(8),
               child: RichText(
                 text: TextSpan(
-                  text: 'Deal Price: ',
+                  text: StringConstants.dealPrice,
                   style: const TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -195,7 +192,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: CustomButton(
-                text: 'Buy Now',
+                text: StringConstants.buyNow,
                 color: GlobalVariables.secondaryColor,
                 onTap: () {},
               ),
@@ -204,7 +201,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: CustomButton(
-                text: 'Add to Cart',
+                text: StringConstants.addToCart,
                 onTap: addToCart,
                 color: GlobalVariables.secondaryColor,
               ),
@@ -217,7 +214,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0),
               child: Text(
-                'Rate The Product',
+                StringConstants.rateProduct,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,

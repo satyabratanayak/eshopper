@@ -1,3 +1,4 @@
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/cart/services/cart_services.dart';
 import 'package:eshopper/features/product_details/services/product_details_services.dart';
 import 'package:eshopper/models/product.dart';
@@ -20,20 +21,6 @@ class _CartProductState extends State<CartProduct> {
   final ProductDetailsServices productDetailsServices =
       ProductDetailsServices();
   final CartServices cartServices = CartServices();
-
-  void increaseQuantity(Product product) {
-    productDetailsServices.addToCart(
-      context: context,
-      product: product,
-    );
-  }
-
-  void decreaseQuantity(Product product) {
-    cartServices.removeFromCart(
-      context: context,
-      product: product,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,13 +70,13 @@ class _CartProductState extends State<CartProduct> {
                   Container(
                     width: 235,
                     padding: const EdgeInsets.only(left: 10),
-                    child: const Text('Eligible for FREE Shipping'),
+                    child: const Text(StringConstants.eligibleForFreeShipping),
                   ),
                   Container(
                     width: 235,
                     padding: const EdgeInsets.only(left: 10, top: 5),
                     child: const Text(
-                      'In Stock',
+                      StringConstants.inStock,
                       style: TextStyle(
                         color: Colors.teal,
                       ),
@@ -163,6 +150,20 @@ class _CartProductState extends State<CartProduct> {
           ),
         ),
       ],
+    );
+  }
+
+  void decreaseQuantity(Product product) {
+    cartServices.removeFromCart(
+      context: context,
+      product: product,
+    );
+  }
+
+  void increaseQuantity(Product product) {
+    productDetailsServices.addToCart(
+      context: context,
+      product: product,
     );
   }
 }

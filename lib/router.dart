@@ -1,4 +1,5 @@
 import 'package:eshopper/common/widgets/bottom_bar.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/address/screens/address_screen.dart';
 import 'package:eshopper/features/admin/screens/add_product_screen.dart';
 import 'package:eshopper/features/auth/screens/auth_screen.dart';
@@ -80,7 +81,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const Scaffold(
           body: Center(
-            child: Text('Screen does not exist!'),
+            child: Text(StringConstants.errorScreenMessage),
           ),
         ),
       );

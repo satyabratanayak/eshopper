@@ -5,8 +5,10 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:eshopper/common/widgets/custom_button.dart';
 import 'package:eshopper/common/widgets/custom_textfield.dart';
 import 'package:eshopper/constants/global_variables.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/constants/utils.dart';
 import 'package:eshopper/features/admin/services/admin_services.dart';
+import 'package:eshopper/models/category.dart';
 import 'package:flutter/material.dart';
 
 class AddProductScreen extends StatefulWidget {
@@ -24,47 +26,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController quantityController = TextEditingController();
   final AdminServices adminServices = AdminServices();
 
-  String category = 'Mobiles';
   List<File> images = [];
   final _addProductFormKey = GlobalKey<FormState>();
 
-  @override
-  void dispose() {
-    super.dispose();
-    productNameController.dispose();
-    descriptionController.dispose();
-    priceController.dispose();
-    quantityController.dispose();
-  }
-
-  List<String> productCategories = [
-    'Mobiles',
-    'Essentials',
-    'Appliances',
-    'Books',
-    'Fashion'
-  ];
-
-  void sellProduct() {
-    if (_addProductFormKey.currentState!.validate() && images.isNotEmpty) {
-      adminServices.sellProduct(
-        context: context,
-        name: productNameController.text,
-        description: descriptionController.text,
-        price: double.parse(priceController.text),
-        quantity: double.parse(quantityController.text),
-        category: category,
-        images: images,
-      );
-    }
-  }
-
-  void selectImages() async {
-    var res = await pickImages();
-    setState(() {
-      images = res;
-    });
-  }
+  List<String> productCategories = categoryList.map((e) => e.title).toList();
+  String category = categoryList.first.title;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +44,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
             ),
           ),
           title: const Text(
-            'Add Product',
+            StringConstants.addProduct,
             style: TextStyle(
               color: Colors.black,
             ),
@@ -133,7 +99,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 ),
                                 const SizedBox(height: 15),
                                 Text(
-                                  'Select Product Images',
+                                  StringConstants.selectProductImages,
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.grey.shade400,
@@ -147,23 +113,23 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 const SizedBox(height: 30),
                 CustomTextField(
                   controller: productNameController,
-                  hintText: 'Product Name',
+                  hintText: StringConstants.productName,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   controller: descriptionController,
-                  hintText: 'Description',
+                  hintText: StringConstants.productDescription,
                   maxLines: 7,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   controller: priceController,
-                  hintText: 'Price',
+                  hintText: StringConstants.productPrice,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   controller: quantityController,
-                  hintText: 'Quantity',
+                  hintText: StringConstants.productQuantity,
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
@@ -188,7 +154,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 const SizedBox(height: 10),
                 CustomButton(
-                  text: 'Sell',
+                  text: StringConstants.sell,
                   color: GlobalVariables.secondaryColor,
                   onTap: sellProduct,
                 ),
@@ -198,5 +164,35 @@ class _AddProductScreenState extends State<AddProductScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    productNameController.dispose();
+    descriptionController.dispose();
+    priceController.dispose();
+    quantityController.dispose();
+  }
+
+  void selectImages() async {
+    var res = await pickImages();
+    setState(() {
+      images = res;
+    });
+  }
+
+  void sellProduct() {
+    if (_addProductFormKey.currentState!.validate() && images.isNotEmpty) {
+      adminServices.sellProduct(
+        context: context,
+        name: productNameController.text,
+        description: descriptionController.text,
+        price: double.parse(priceController.text),
+        quantity: double.parse(quantityController.text),
+        category: category,
+        images: images,
+      );
+    }
   }
 }

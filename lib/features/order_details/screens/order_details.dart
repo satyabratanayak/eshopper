@@ -1,5 +1,6 @@
 import 'package:eshopper/common/widgets/custom_button.dart';
 import 'package:eshopper/constants/global_variables.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/admin/services/admin_services.dart';
 import 'package:eshopper/features/search/screens/search_screen.dart';
 import 'package:eshopper/models/order.dart';
@@ -23,30 +24,6 @@ class OrderDetailScreen extends StatefulWidget {
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
   int currentStep = 0;
   final AdminServices adminServices = AdminServices();
-
-  void navigateToSearchScreen(String query) {
-    Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    currentStep = widget.order.status;
-  }
-
-  // !!! ONLY FOR ADMIN!!!
-  void changeOrderStatus(int status) {
-    adminServices.changeOrderStatus(
-      context: context,
-      status: status + 1,
-      order: widget.order,
-      onSuccess: () {
-        setState(() {
-          currentStep += 1;
-        });
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,21 +68,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         fillColor: Colors.white,
                         contentPadding: const EdgeInsets.only(top: 10),
                         border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(7)),
                           borderSide: BorderSide.none,
                         ),
                         enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(7)),
                           borderSide: BorderSide(
                             color: Colors.black38,
                             width: 1,
                           ),
                         ),
-                        hintText: 'Search Amazon.in',
+                        hintText: StringConstants.search,
                         hintStyle: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 17,
@@ -132,7 +105,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'View order details',
+                StringConstants.viewOrderDetails,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -142,25 +115,24 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black12,
-                  ),
+                  border: Border.all(color: Colors.black12),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Order Date:      ${DateFormat().format(
+                    Text('${StringConstants.orderDate}: ${DateFormat().format(
                       DateTime.fromMillisecondsSinceEpoch(
                           widget.order.orderedAt),
                     )}'),
-                    Text('Order ID:          ${widget.order.id}'),
-                    Text('Order Total:      ₹${widget.order.totalPrice}'),
+                    Text('${StringConstants.orderId}: ${widget.order.id}'),
+                    Text(
+                        '${StringConstants.orderTotal}: ₹${widget.order.totalPrice}'),
                   ],
                 ),
               ),
               const SizedBox(height: 10),
               const Text(
-                'Purchase Details',
+                StringConstants.purchaseDetails,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -198,7 +170,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  'Qty: ${widget.order.quantity[i]}',
+                                  '${StringConstants.qty} ${widget.order.quantity[i]}',
                                 ),
                               ],
                             ),
@@ -210,7 +182,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Tracking',
+                StringConstants.tracking,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -225,9 +197,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 child: Stepper(
                   currentStep: currentStep,
                   controlsBuilder: (context, details) {
-                    if (user.type == 'admin') {
+                    if (user.type == DBConstants.admin) {
                       return CustomButton(
-                        text: 'Done',
+                        text: StringConstants.done,
                         color: GlobalVariables.secondaryColor,
                         onTap: () => changeOrderStatus(details.currentStep),
                       );
@@ -236,40 +208,32 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   },
                   steps: [
                     Step(
-                      title: const Text('Pending'),
-                      content: const Text(
-                        'Your order is yet to be delivered',
-                      ),
+                      title: const Text(StringConstants.pending),
+                      content: const Text(StringConstants.yetToDeliver),
                       isActive: currentStep > 0,
                       state: currentStep > 0
                           ? StepState.complete
                           : StepState.indexed,
                     ),
                     Step(
-                      title: const Text('Completed'),
-                      content: const Text(
-                        'Your order has been delivered, you are yet to sign.',
-                      ),
+                      title: const Text(StringConstants.shipped),
+                      content: const Text(StringConstants.orderShipped),
                       isActive: currentStep > 1,
                       state: currentStep > 1
                           ? StepState.complete
                           : StepState.indexed,
                     ),
                     Step(
-                      title: const Text('Received'),
-                      content: const Text(
-                        'Your order has been delivered and signed by you.',
-                      ),
+                      title: const Text(StringConstants.received),
+                      content: const Text(StringConstants.orderReceived),
                       isActive: currentStep > 2,
                       state: currentStep > 2
                           ? StepState.complete
                           : StepState.indexed,
                     ),
                     Step(
-                      title: const Text('Delivered'),
-                      content: const Text(
-                        'Your order has been delivered and signed by you!',
-                      ),
+                      title: const Text(StringConstants.delivered),
+                      content: const Text(StringConstants.orderDelivered),
                       isActive: currentStep >= 3,
                       state: currentStep >= 3
                           ? StepState.complete
@@ -283,5 +247,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         ),
       ),
     );
+  }
+
+  // !!! ONLY FOR ADMIN!!!
+  void changeOrderStatus(int status) {
+    adminServices.changeOrderStatus(
+      context: context,
+      status: status + 1,
+      order: widget.order,
+      onSuccess: () {
+        setState(() {
+          currentStep += 1;
+        });
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    currentStep = widget.order.status;
+  }
+
+  void navigateToSearchScreen(String query) {
+    Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
 }

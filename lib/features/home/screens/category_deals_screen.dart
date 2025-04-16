@@ -1,5 +1,6 @@
 import 'package:eshopper/common/widgets/loader.dart';
 import 'package:eshopper/constants/global_variables.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/home/services/home_services.dart';
 import 'package:eshopper/features/product_details/screens/product_details_screen.dart';
 import 'package:eshopper/models/product.dart';
@@ -49,7 +50,7 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   alignment: Alignment.topLeft,
                   child: Text(
-                    'Keep shopping for ${widget.category}',
+                    '${StringConstants.keepShopping} ${widget.category}',
                     style: const TextStyle(
                       fontSize: 20,
                     ),

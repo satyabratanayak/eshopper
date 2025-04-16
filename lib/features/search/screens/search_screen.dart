@@ -1,5 +1,6 @@
 import 'package:eshopper/common/widgets/loader.dart';
 import 'package:eshopper/constants/global_variables.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/home/widgets/address_box.dart';
 import 'package:eshopper/features/product_details/screens/product_details_screen.dart';
 import 'package:eshopper/features/search/services/search_services.dart';
@@ -22,22 +23,6 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   List<Product>? products;
   final SearchServices searchServices = SearchServices();
-
-  @override
-  void initState() {
-    super.initState();
-    fetchSearchedProduct();
-  }
-
-  fetchSearchedProduct() async {
-    products = await searchServices.fetchSearchedProduct(
-        context: context, searchQuery: widget.searchQuery);
-    setState(() {});
-  }
-
-  void navigateToSearchScreen(String query) {
-    Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +79,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             width: 1,
                           ),
                         ),
-                        hintText: 'Search Amazon.in',
+                        hintText: StringConstants.search,
                         hintStyle: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 17,
@@ -142,5 +127,21 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
     );
+  }
+
+  fetchSearchedProduct() async {
+    products = await searchServices.fetchSearchedProduct(
+        context: context, searchQuery: widget.searchQuery);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchSearchedProduct();
+  }
+
+  void navigateToSearchScreen(String query) {
+    Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
 }

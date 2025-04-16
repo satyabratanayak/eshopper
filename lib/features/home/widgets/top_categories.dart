@@ -1,26 +1,21 @@
-import 'package:eshopper/constants/global_variables.dart';
 import 'package:eshopper/features/home/screens/category_deals_screen.dart';
+import 'package:eshopper/models/category.dart';
 import 'package:flutter/material.dart';
 
 class TopCategories extends StatelessWidget {
   const TopCategories({super.key});
-
-  void navigateToCategoryPage(BuildContext context, String category) {
-    Navigator.pushNamed(context, CategoryDealsScreen.routeName,
-        arguments: category);
-  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 60,
       child: ListView.builder(
-        itemCount: GlobalVariables.categoryList.length,
+        itemCount: categoryList.length,
         scrollDirection: Axis.horizontal,
         itemExtent: 75,
         itemBuilder: (context, index) {
-          final image = GlobalVariables.categoryList[index].image;
-          final title = GlobalVariables.categoryList[index].title;
+          final image = categoryList[index].image;
+          final title = categoryList[index].title;
           return GestureDetector(
             onTap: () => navigateToCategoryPage(context, title),
             child: Column(
@@ -50,5 +45,10 @@ class TopCategories extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void navigateToCategoryPage(BuildContext context, String category) {
+    Navigator.pushNamed(context, CategoryDealsScreen.routeName,
+        arguments: category);
   }
 }

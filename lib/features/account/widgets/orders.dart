@@ -1,5 +1,6 @@
 import 'package:eshopper/common/widgets/loader.dart';
 import 'package:eshopper/constants/global_variables.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/account/services/account_services.dart';
 import 'package:eshopper/features/account/widgets/single_product.dart';
 import 'package:eshopper/features/order_details/screens/order_details.dart';
@@ -20,13 +21,13 @@ class _OrdersState extends State<Orders> {
   @override
   Widget build(BuildContext context) {
     if (orders == null) {
-      return const Loader(); // Still loading
+      return const Loader();
     }
 
     if (orders!.isEmpty) {
       return const Center(
         child: Text(
-          "You have no orders yet.",
+          StringConstants.noOrders,
           style: TextStyle(fontSize: 16),
         ),
       );
@@ -41,14 +42,14 @@ class _OrdersState extends State<Orders> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Your Orders',
+                StringConstants.yourOrders,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               Text(
-                'See all',
+                StringConstants.seeAll,
                 style: TextStyle(
                   color: GlobalVariables.selectedNavBarColor,
                 ),
@@ -81,8 +82,7 @@ class _OrdersState extends State<Orders> {
                   );
                 },
                 child: SingleProduct(
-                  image: image ??
-                      'https://karanzi.websites.co.in/obaju-turquoise/img/product-placeholder.png',
+                  image: image ?? AssetPath.defaultProductImage,
                 ),
               );
             },

@@ -1,6 +1,7 @@
 import 'package:eshopper/common/widgets/custom_button.dart';
 import 'package:eshopper/common/widgets/custom_textfield.dart';
 import 'package:eshopper/constants/global_variables.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/auth/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +38,7 @@ class _AuthScreenState extends State<AuthScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Welcome',
+                StringConstants.welcome,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w500,
@@ -48,7 +49,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     ? GlobalVariables.backgroundColor
                     : GlobalVariables.greyBackgroundCOlor,
                 title: const Text(
-                  'Create Account',
+                  StringConstants.createAccount,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -75,21 +76,21 @@ class _AuthScreenState extends State<AuthScreen> {
                       children: [
                         CustomTextField(
                           controller: _nameController,
-                          hintText: 'Name',
+                          hintText: StringConstants.name,
                         ),
                         const SizedBox(height: 10),
                         CustomTextField(
                           controller: _emailController,
-                          hintText: 'Email',
+                          hintText: StringConstants.email,
                         ),
                         const SizedBox(height: 10),
                         CustomTextField(
                           controller: _passwordController,
-                          hintText: 'Password',
+                          hintText: StringConstants.password,
                         ),
                         const SizedBox(height: 10),
                         CustomButton(
-                          text: 'Sign Up',
+                          text: StringConstants.signUp,
                           color: GlobalVariables.secondaryColor,
                           onTap: () {
                             if (_signUpFormKey.currentState!.validate()) {
@@ -106,7 +107,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     ? GlobalVariables.backgroundColor
                     : GlobalVariables.greyBackgroundCOlor,
                 title: const Text(
-                  'Sign-In.',
+                  StringConstants.signIn,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -133,16 +134,16 @@ class _AuthScreenState extends State<AuthScreen> {
                       children: [
                         CustomTextField(
                           controller: _emailController,
-                          hintText: 'Email',
+                          hintText: StringConstants.email,
                         ),
                         const SizedBox(height: 10),
                         CustomTextField(
                           controller: _passwordController,
-                          hintText: 'Password',
+                          hintText: StringConstants.password,
                         ),
                         const SizedBox(height: 10),
                         CustomButton(
-                          text: 'Sign In',
+                          text: StringConstants.signIn,
                           color: GlobalVariables.secondaryColor,
                           onTap: () {
                             if (_signInFormKey.currentState!.validate()) {

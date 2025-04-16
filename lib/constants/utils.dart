@@ -4,15 +4,6 @@ import 'package:eshopper/main.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-void showGlobalSnackBar(String message) {
-  final context = navigatorKey.currentContext;
-  if (context != null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
-  }
-}
-
 Future<List<File>> pickImages() async {
   List<File> images = [];
   try {
@@ -29,4 +20,13 @@ Future<List<File>> pickImages() async {
     debugPrint(e.toString());
   }
   return images;
+}
+
+void showGlobalSnackBar(String message) {
+  final context = navigatorKey.currentContext;
+  if (context != null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 }

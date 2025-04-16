@@ -22,18 +22,7 @@ class Order {
     required this.totalPrice,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'products': products.map((x) => x.toMap()).toList(),
-      'quantity': quantity,
-      'address': address,
-      'userId': userId,
-      'orderedAt': orderedAt,
-      'status': status,
-      'totalPrice': totalPrice,
-    };
-  }
+  factory Order.fromJson(String source) => Order.fromMap(json.decode(source));
 
   factory Order.fromMap(Map<String, dynamic> map) {
     return Order(
@@ -55,5 +44,16 @@ class Order {
 
   String toJson() => json.encode(toMap());
 
-  factory Order.fromJson(String source) => Order.fromMap(json.decode(source));
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'products': products.map((x) => x.toMap()).toList(),
+      'quantity': quantity,
+      'address': address,
+      'userId': userId,
+      'orderedAt': orderedAt,
+      'status': status,
+      'totalPrice': totalPrice,
+    };
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:eshopper/common/widgets/loader.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/account/widgets/single_product.dart';
 import 'package:eshopper/features/admin/screens/add_product_screen.dart';
 import 'package:eshopper/features/admin/services/admin_services.dart';
@@ -58,7 +59,7 @@ class _PostsScreenState extends State<PostsScreen> {
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: navigateToAddProduct,
-              tooltip: 'Add a Product',
+              tooltip: StringConstants.addProduct,
               child: const Icon(Icons.add),
             ),
             floatingActionButtonLocation:

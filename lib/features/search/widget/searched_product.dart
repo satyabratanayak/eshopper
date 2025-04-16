@@ -1,4 +1,5 @@
 import 'package:eshopper/common/widgets/stars.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/models/product.dart';
 import 'package:flutter/material.dart';
 
@@ -20,9 +21,7 @@ class SearchedProduct extends StatelessWidget {
     return Column(
       children: [
         Container(
-          margin: const EdgeInsets.symmetric(
-            horizontal: 10,
-          ),
+          margin: const EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             children: [
               Image.network(
@@ -38,18 +37,14 @@ class SearchedProduct extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       product.name,
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
+                      style: const TextStyle(fontSize: 16),
                       maxLines: 2,
                     ),
                   ),
                   Container(
                     width: 235,
                     padding: const EdgeInsets.only(left: 10, top: 5),
-                    child: Stars(
-                      rating: avgRating,
-                    ),
+                    child: Stars(rating: avgRating),
                   ),
                   Container(
                     width: 235,
@@ -66,16 +61,14 @@ class SearchedProduct extends StatelessWidget {
                   Container(
                     width: 235,
                     padding: const EdgeInsets.only(left: 10),
-                    child: const Text('Eligible for FREE Shipping'),
+                    child: const Text(StringConstants.eligibleForFreeShipping),
                   ),
                   Container(
                     width: 235,
                     padding: const EdgeInsets.only(left: 10, top: 5),
                     child: const Text(
-                      'In Stock',
-                      style: TextStyle(
-                        color: Colors.teal,
-                      ),
+                      StringConstants.inStock,
+                      style: TextStyle(color: Colors.teal),
                       maxLines: 2,
                     ),
                   ),

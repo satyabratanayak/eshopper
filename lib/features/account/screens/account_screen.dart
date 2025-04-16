@@ -1,4 +1,5 @@
 import 'package:eshopper/constants/global_variables.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/account/widgets/below_app_bar.dart';
 import 'package:eshopper/features/account/widgets/orders.dart';
 import 'package:eshopper/features/account/widgets/top_buttons.dart';
@@ -24,7 +25,7 @@ class AccountScreen extends StatelessWidget {
               Container(
                 alignment: Alignment.topLeft,
                 child: Image.asset(
-                  'assets/images/amazon_in.png',
+                  AssetPath.amazonPng,
                   width: 120,
                   height: 45,
                   color: Colors.black,

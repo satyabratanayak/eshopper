@@ -1,5 +1,6 @@
 import 'package:eshopper/common/widgets/custom_button.dart';
 import 'package:eshopper/constants/global_variables.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/address/screens/address_screen.dart';
 import 'package:eshopper/features/cart/widgets/cart_product.dart';
 import 'package:eshopper/features/cart/widgets/cart_subtotal.dart';
@@ -17,18 +18,6 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  void navigateToSearchScreen(String query) {
-    Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
-  }
-
-  void navigateToAddress(int sum) {
-    Navigator.pushNamed(
-      context,
-      AddressScreen.routeName,
-      arguments: sum.toString(),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final user = context.watch<UserProvider>().user;
@@ -90,7 +79,7 @@ class _CartScreenState extends State<CartScreen> {
                             width: 1,
                           ),
                         ),
-                        hintText: 'Search Amazon.in',
+                        hintText: StringConstants.search,
                         hintStyle: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 17,
@@ -118,7 +107,8 @@ class _CartScreenState extends State<CartScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CustomButton(
-                text: 'Proceed to Buy (${user.cart.length} items)',
+                text:
+                    '${StringConstants.proceedToBuy} (${user.cart.length} ${StringConstants.items})',
                 onTap: () => navigateToAddress(sum),
                 color: GlobalVariables.secondaryColor,
               ),
@@ -142,5 +132,17 @@ class _CartScreenState extends State<CartScreen> {
         ),
       ),
     );
+  }
+
+  void navigateToAddress(int sum) {
+    Navigator.pushNamed(
+      context,
+      AddressScreen.routeName,
+      arguments: sum.toString(),
+    );
+  }
+
+  void navigateToSearchScreen(String query) {
+    Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
 }

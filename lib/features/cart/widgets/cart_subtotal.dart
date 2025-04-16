@@ -1,3 +1,4 @@
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,13 +19,13 @@ class CartSubtotal extends StatelessWidget {
       child: Row(
         children: [
           const Text(
-            'Subtotal ',
+            StringConstants.subTotal,
             style: TextStyle(
               fontSize: 20,
             ),
           ),
           Text(
-            '₹$sum',
+            ' ₹$sum',
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,

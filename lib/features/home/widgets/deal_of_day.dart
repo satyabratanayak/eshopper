@@ -1,4 +1,5 @@
 import 'package:eshopper/common/widgets/loader.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/home/services/home_services.dart';
 import 'package:eshopper/features/product_details/screens/product_details_screen.dart';
 import 'package:eshopper/models/product.dart';
@@ -31,7 +32,7 @@ class _DealOfDayState extends State<DealOfDay> {
                       alignment: Alignment.topLeft,
                       padding: const EdgeInsets.only(left: 10, top: 15),
                       child: const Text(
-                        'Deal of the day',
+                        StringConstants.dealOfTheDay,
                         style: TextStyle(fontSize: 20),
                       ),
                     ),
@@ -82,7 +83,7 @@ class _DealOfDayState extends State<DealOfDay> {
                       child: GestureDetector(
                         onTap: fetchAllProducts,
                         child: Text(
-                          'See all deals',
+                          StringConstants.seeAllDeals,
                           style: TextStyle(
                             color: Colors.cyan[800],
                           ),

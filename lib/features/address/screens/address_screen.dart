@@ -1,5 +1,6 @@
 import 'package:eshopper/common/widgets/custom_textfield.dart';
 import 'package:eshopper/constants/global_variables.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/constants/utils.dart';
 import 'package:eshopper/features/address/services/address_services.dart';
 import 'package:eshopper/providers/user_provider.dart';
@@ -75,7 +76,7 @@ class _AddressScreenState extends State<AddressScreen> {
                     ),
                     const SizedBox(height: 20),
                     const Text(
-                      'OR',
+                      StringConstants.or,
                       style: TextStyle(
                         fontSize: 18,
                       ),
@@ -89,22 +90,22 @@ class _AddressScreenState extends State<AddressScreen> {
                   children: [
                     CustomTextField(
                       controller: flatBuildingController,
-                      hintText: 'Flat, House no, Building',
+                      hintText: StringConstants.flatBuilding,
                     ),
                     const SizedBox(height: 10),
                     CustomTextField(
                       controller: areaController,
-                      hintText: 'Area, Street',
+                      hintText: StringConstants.area,
                     ),
                     const SizedBox(height: 10),
                     CustomTextField(
                       controller: pincodeController,
-                      hintText: 'Pincode',
+                      hintText: StringConstants.pincode,
                     ),
                     const SizedBox(height: 10),
                     CustomTextField(
                       controller: cityController,
-                      hintText: 'Town/City',
+                      hintText: StringConstants.city,
                     ),
                     const SizedBox(height: 10),
                   ],
@@ -157,12 +158,12 @@ class _AddressScreenState extends State<AddressScreen> {
     paymentItems.add(
       PaymentItem(
         amount: widget.totalAmount,
-        label: 'Total Amount',
+        label: StringConstants.totalAmount,
         status: PaymentItemStatus.final_price,
       ),
     );
     // Load Apple Pay config
-    rootBundle.loadString('assets/applepay.json').then((jsonString) {
+    rootBundle.loadString(AssetPath.applePay).then((jsonString) {
       final applePayConfig = PaymentConfiguration.fromJsonString(jsonString);
       setState(() {
         _applePayConfig = applePayConfig;
@@ -170,7 +171,7 @@ class _AddressScreenState extends State<AddressScreen> {
     });
 
     // Load Google Pay config
-    rootBundle.loadString('assets/gpay.json').then((jsonString) {
+    rootBundle.loadString(AssetPath.gPay).then((jsonString) {
       final googlePayConfig = PaymentConfiguration.fromJsonString(jsonString);
       setState(() {
         _gogglePayConfig = googlePayConfig;
@@ -221,12 +222,12 @@ class _AddressScreenState extends State<AddressScreen> {
         addressToBeUsed =
             '${flatBuildingController.text}, ${areaController.text}, ${cityController.text} - ${pincodeController.text}';
       } else {
-        throw Exception('Please enter all the values!');
+        throw Exception(StringConstants.enterAllValues);
       }
     } else if (addressFromProvider.isNotEmpty) {
       addressToBeUsed = addressFromProvider;
     } else {
-      showGlobalSnackBar('ERROR');
+      showGlobalSnackBar(StringConstants.error);
     }
   }
 }

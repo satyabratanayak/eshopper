@@ -1,4 +1,5 @@
 import 'package:eshopper/constants/global_variables.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/admin/screens/analtyics_screen.dart';
 import 'package:eshopper/features/admin/screens/orders_screen.dart';
 import 'package:eshopper/features/admin/screens/posts_screen.dart';
@@ -22,12 +23,6 @@ class _AdminScreenState extends State<AdminScreen> {
     const OrdersScreen(),
   ];
 
-  void updatePage(int page) {
-    setState(() {
-      _page = page;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,14 +40,14 @@ class _AdminScreenState extends State<AdminScreen> {
               Container(
                 alignment: Alignment.topLeft,
                 child: Image.asset(
-                  'assets/images/amazon_in.png',
+                  AssetPath.amazonPng,
                   width: 120,
                   height: 45,
                   color: Colors.black,
                 ),
               ),
               const Text(
-                'Admin',
+                StringConstants.admin,
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -134,5 +129,11 @@ class _AdminScreenState extends State<AdminScreen> {
         ],
       ),
     );
+  }
+
+  void updatePage(int page) {
+    setState(() {
+      _page = page;
+    });
   }
 }
