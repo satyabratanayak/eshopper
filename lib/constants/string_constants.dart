@@ -12,7 +12,7 @@ class DBConstants {
 }
 
 class StringConstants {
-  static const appName = 'Amazon Clone';
+  static const appName = 'Eshopper';
   static const errorScreenMessage = 'Screen does not exist!';
   static const enterYour = 'Enter your';
   static const hello = 'Hello, ';
@@ -59,7 +59,7 @@ class StringConstants {
   static const signIn = 'Sign In';
   static const accountCreated =
       'Account created! Login with the same credentials!';
-  static const search = 'Search Amazon.in';
+  static const search = 'Search Eshopper';
   static const proceedToBuy = 'Proceed to Buy';
   static const items = 'items';
   static const eligibleForFreeShipping = 'Eligible for FREE Shipping';
@@ -71,7 +71,7 @@ class StringConstants {
   static const removeFromWishlist = 'Remove from Wishlist';
   static const rateProduct = 'Rate the product';
   static const subTotal = 'Subtotal';
-  static const deliveryTo = 'Deliver to';
+  static const deliverTo = 'Deliver to';
   static const seeAllDeals = 'See all deals';
   static const dealOfTheDay = 'Deal of the day';
   static const keepShopping = 'Keep shopping for';

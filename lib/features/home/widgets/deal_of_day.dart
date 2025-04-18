@@ -1,4 +1,5 @@
 import 'package:eshopper/common/widgets/loader.dart';
+import 'package:eshopper/common/widgets/product_card.dart';
 import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/home/services/home_services.dart';
 import 'package:eshopper/features/product_details/screens/product_details_screen.dart';
@@ -27,65 +28,59 @@ class _DealOfDayState extends State<DealOfDay> {
             : GestureDetector(
                 onTap: navigateToDetailScreen,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       alignment: Alignment.topLeft,
                       padding: const EdgeInsets.only(left: 10, top: 15),
                       child: const Text(
                         StringConstants.dealOfTheDay,
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    Image.network(
-                      product.images[0],
+                    SizedBox(
                       height: 235,
-                      fit: BoxFit.fitHeight,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 15),
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        '₹${product.price}',
-                        style: TextStyle(fontSize: 18),
+                      child: Image.network(
+                        product.images[0],
+                        fit: BoxFit.cover,
+                        width: double.infinity,
                       ),
                     ),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      padding:
-                          const EdgeInsets.only(left: 15, top: 5, right: 40),
-                      child: Text(
-                        product.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: product.images
-                            .map(
-                              (e) => Image.network(
-                                e,
-                                fit: BoxFit.fitWidth,
-                                width: 100,
-                                height: 100,
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                    Container(
+                    Padding(
                       padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                      ).copyWith(left: 15),
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product.name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            '₹${product.price}',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 15)
+                          .copyWith(left: 15),
                       alignment: Alignment.topLeft,
                       child: GestureDetector(
                         onTap: fetchAllProducts,
                         child: Text(
                           StringConstants.seeAllDeals,
                           style: TextStyle(
-                            color: Colors.cyan[800],
+                            color: Colors.teal,
                           ),
                         ),
                       ),
@@ -107,7 +102,25 @@ class _DealOfDayState extends State<DealOfDay> {
                             ),
                           );
                         },
-                      )
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Row(
+                        children: [
+                          Expanded(child: ProductCard(product: products[0])),
+                          Expanded(child: ProductCard(product: products[1])),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Row(
+                        children: [
+                          Expanded(child: ProductCard(product: products[2])),
+                          Expanded(child: ProductCard(product: products[3])),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -137,6 +150,7 @@ class _DealOfDayState extends State<DealOfDay> {
   void initState() {
     super.initState();
     fetchDealOfDay();
+    fetchAllProducts();
   }
 
   void navigateToDetailScreen() {

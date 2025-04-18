@@ -1,3 +1,4 @@
+import 'package:eshopper/constants/global_variables.dart';
 import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -13,13 +14,7 @@ class AddressBox extends StatelessWidget {
     return Container(
       height: 40,
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color.fromARGB(255, 114, 226, 221),
-            Color.fromARGB(255, 162, 236, 233),
-          ],
-          stops: [0.5, 1.0],
-        ),
+        gradient: GlobalVariables.addressBarGradient,
       ),
       padding: const EdgeInsets.only(left: 10),
       child: Row(
@@ -32,7 +27,7 @@ class AddressBox extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 5),
               child: Text(
-                '${StringConstants.deliveryTo} ${user.name} - ${user.address}',
+                '${StringConstants.deliverTo} ${user.name} - ${user.address}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
                 ),
