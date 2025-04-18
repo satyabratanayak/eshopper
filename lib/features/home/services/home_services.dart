@@ -31,7 +31,6 @@ class HomeServices {
         response: res,
         context: context,
         onSuccess: () {
-          log('response : ${res.body}');
           final list = jsonDecode(res.body) as List;
           List<Product> productList =
               list.map((e) => Product.fromMap(e)).toList();
@@ -80,20 +79,11 @@ class HomeServices {
     return productList;
   }
 
-  Future<Product> fetchDealOfDay({
+  Future<List<Product>> fetchDealOfDay({
     required BuildContext context,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    Product product = Product(
-      name: '',
-      description: '',
-      quantity: 0,
-      images: [],
-      category: '',
-      price: 0,
-      id: '',
-      rating: [],
-    );
+    List<Product> product = [];
 
     try {
       http.Response res =
@@ -107,7 +97,10 @@ class HomeServices {
         response: res,
         context: context,
         onSuccess: () {
-          product = Product.fromJson(res.body);
+          final list = jsonDecode(res.body) as List;
+          List<Product> productList =
+              list.map((e) => Product.fromMap(e)).toList();
+          product = productList;
         },
       );
     } catch (e) {

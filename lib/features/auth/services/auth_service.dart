@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:eshopper/common/widgets/bottom_bar.dart';
+import 'package:eshopper/common/widgets/user_page.dart';
 import 'package:eshopper/constants/error_handling.dart';
 import 'package:eshopper/constants/global_variables.dart';
 import 'package:eshopper/constants/string_constants.dart';
@@ -81,7 +81,7 @@ class AuthService {
           if (!context.mounted) return;
           Navigator.pushNamedAndRemoveUntil(
             context,
-            BottomBar.routeName,
+            UserPage.routeName,
             (route) => false,
           );
         },

@@ -25,6 +25,7 @@ class StringConstants {
   static const logOut = 'Log Out';
   static const wishlist = 'Your Wishlist';
   static const applyForSeller = 'Apply for Seller';
+  static const applyForBuyer = 'Apply for Buyer';
   static const noOrders = 'You have no orders yet.';
   static const flatBuilding = 'Flat, House no, Building';
   static const area = 'Area, Street';
@@ -39,6 +40,7 @@ class StringConstants {
   static const selectProductImages = 'Select Product Images';
   static const productName = 'Product Name';
   static const productDescription = 'Product Description';
+  static const productMrp = 'Product MRP';
   static const productPrice = 'Product Price';
   static const productQuantity = 'Product Quantity';
   static const sell = 'Sell';
@@ -73,7 +75,7 @@ class StringConstants {
   static const subTotal = 'Subtotal';
   static const deliverTo = 'Deliver to';
   static const seeAllDeals = 'See all deals';
-  static const dealOfTheDay = 'Deal of the day';
+  static const dealOfTheDay = 'Deals of the day';
   static const keepShopping = 'Keep shopping for';
   static const viewOrderDetails = 'View order details';
   static const orderDate = 'Order Date:';

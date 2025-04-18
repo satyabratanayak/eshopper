@@ -39,9 +39,18 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   height: 250,
                   child: CategoryProductsChart(salesData: earnings ?? []),
                 ),
-                AccountButton(
-                  text: StringConstants.logOut,
-                  onTap: () => AccountServices().logOut(context),
+                Spacer(),
+                Row(
+                  children: [
+                    AccountButton(
+                      text: StringConstants.logOut,
+                      onTap: () => AccountServices().logOut(context),
+                    ),
+                    AccountButton(
+                      text: StringConstants.applyForBuyer,
+                      onTap: () => AccountServices().goToBuyer(context),
+                    ),
+                  ],
                 ),
               ],
             ),

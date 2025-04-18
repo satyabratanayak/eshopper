@@ -101,6 +101,7 @@ class _AddressScreenState extends State<AddressScreen> {
                     CustomTextField(
                       controller: pincodeController,
                       hintText: StringConstants.pincode,
+                      textInputType: TextInputType.number,
                     ),
                     const SizedBox(height: 10),
                     CustomTextField(

@@ -1,4 +1,4 @@
-import 'package:eshopper/common/widgets/bottom_bar.dart';
+import 'package:eshopper/common/widgets/user_page.dart';
 import 'package:eshopper/constants/global_variables.dart';
 import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/admin/screens/admin_screen.dart';
@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> {
       onGenerateRoute: (settings) => generateRoute(settings),
       home: Provider.of<UserProvider>(context).user.token.isNotEmpty
           ? Provider.of<UserProvider>(context).user.type == DBConstants.user
-              ? const BottomBar()
+              ? const UserPage()
               : const AdminScreen()
           : const AuthScreen(),
     );

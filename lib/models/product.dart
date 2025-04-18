@@ -8,6 +8,7 @@ class Product {
   final double quantity;
   final List<String> images;
   final String category;
+  final double mrp;
   final double price;
   final String id;
   final List<Rating> rating;
@@ -16,6 +17,7 @@ class Product {
     required this.description,
     required this.quantity,
     required this.images,
+    required this.mrp,
     required this.category,
     required this.price,
     required this.id,
@@ -28,6 +30,7 @@ class Product {
         quantity: 0,
         images: [],
         category: '',
+        mrp: 0,
         price: 0,
         id: '',
         rating: [],
@@ -43,6 +46,7 @@ class Product {
       quantity: map['quantity']?.toDouble() ?? 0.0,
       images: List<String>.from(map['images']),
       category: map['category'] ?? '',
+      mrp: map['mrp']?.toDouble() ?? 0.0,
       price: map['price']?.toDouble() ?? 0.0,
       id: map['_id'] ?? '',
       rating: map['ratings'] != null
@@ -63,6 +67,7 @@ class Product {
       'quantity': quantity,
       'images': images,
       'category': category,
+      'mrp': mrp,
       'price': price,
       'id': id,
       'rating': rating,
