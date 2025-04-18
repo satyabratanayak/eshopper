@@ -64,7 +64,10 @@ class StringConstants {
   static const search = 'Search Eshopper';
   static const proceedToBuy = 'Proceed to Buy';
   static const items = 'items';
+  static const mrp = 'M.R.P.: ';
+  static const limitedTimeDeal = 'Limited time deal';
   static const eligibleForFreeShipping = 'Eligible for FREE Shipping';
+  static const extraForShipping = '₹50 extra for shipping';
   static const inStock = 'In Stock';
   static const outOfStock = 'Out of Stock';
   static const addToCart = 'Add to Cart';
@@ -72,7 +75,7 @@ class StringConstants {
   static const addToWishlist = 'Add to Wishlist';
   static const removeFromWishlist = 'Remove from Wishlist';
   static const rateProduct = 'Rate the product';
-  static const subTotal = 'Subtotal';
+  static const subTotal = 'Subtotal:';
   static const deliverTo = 'Deliver to';
   static const seeAllDeals = 'See all deals';
   static const dealOfTheDay = 'Deals of the day';

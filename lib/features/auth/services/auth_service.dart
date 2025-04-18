@@ -20,8 +20,7 @@ class AuthService {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('x-auth-token');
-
-      if (token == null) {
+      if (token == null || token.trim().isEmpty) {
         prefs.setString('x-auth-token', '');
         return;
       }
@@ -34,7 +33,6 @@ class AuthService {
       );
 
       var response = jsonDecode(tokenRes.body);
-
       if (response == true) {
         http.Response userRes = await http.get(
           Uri.parse('$uri/'),

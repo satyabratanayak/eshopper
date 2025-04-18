@@ -1,4 +1,5 @@
 import 'package:eshopper/constants/string_constants.dart';
+import 'package:eshopper/constants/utils.dart';
 import 'package:eshopper/features/cart/services/cart_services.dart';
 import 'package:eshopper/features/product_details/services/product_details_services.dart';
 import 'package:eshopper/models/product.dart';
@@ -30,60 +31,96 @@ class _CartProductState extends State<CartProduct> {
 
     return Column(
       children: [
+        const SizedBox(height: 15),
         Container(
-          margin: const EdgeInsets.symmetric(
-            horizontal: 10,
-          ),
+          color: Colors.black12.withValues(alpha: 0.08),
+          height: 1,
+        ),
+        const SizedBox(height: 10),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             children: [
               Image.network(
                 product.images[0],
-                fit: BoxFit.contain,
+                fit: BoxFit.cover,
                 height: 135,
                 width: 135,
               ),
-              Column(
-                children: [
-                  Container(
-                    width: 235,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
+              SizedBox(width: 10),
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
                       product.name,
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
+                      style: const TextStyle(fontSize: 16),
                       maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  Container(
-                    width: 235,
-                    padding: const EdgeInsets.only(left: 10, top: 5),
-                    child: Text(
-                      '₹${product.price}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 2,
-                    ),
-                  ),
-                  Container(
-                    width: 235,
-                    padding: const EdgeInsets.only(left: 10),
-                    child: const Text(StringConstants.eligibleForFreeShipping),
-                  ),
-                  Container(
-                    width: 235,
-                    padding: const EdgeInsets.only(left: 10, top: 5),
-                    child: const Text(
-                      StringConstants.inStock,
+                    const Text(
+                      StringConstants.limitedTimeDeal,
                       style: TextStyle(
-                        color: Colors.teal,
-                      ),
-                      maxLines: 2,
+                          color: Colors.red, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                ],
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            '-${100 - ((product.price / product.mrp) * 100).ceil()}%',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          product.price > 150
+                              ? '₹${product.price}'
+                              : '₹${product.price + 50}',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text(StringConstants.mrp),
+                        Text(
+                          '₹${product.mrp}',
+                          style: const TextStyle(
+                            fontSize: 15,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                          maxLines: 1,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    product.price > 150
+                        ? const Text(StringConstants.eligibleForFreeShipping)
+                        : const Text(StringConstants.extraForShipping),
+                    product.quantity >= quantity
+                        ? const Text(
+                            StringConstants.inStock,
+                            style: TextStyle(color: Colors.teal),
+                          )
+                        : const Text(
+                            StringConstants.outOfStock,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -131,18 +168,34 @@ class _CartProductState extends State<CartProduct> {
                         ),
                       ),
                     ),
-                    InkWell(
-                      onTap: () => increaseQuantity(product),
-                      child: Container(
-                        width: 35,
-                        height: 32,
-                        alignment: Alignment.center,
-                        child: const Icon(
-                          Icons.add,
-                          size: 18,
-                        ),
-                      ),
-                    ),
+                    product.quantity <= quantity
+                        ? InkWell(
+                            onTap: () => showGlobalSnackBar(
+                                'Only ${product.quantity.toInt()} item(s) available'),
+                            child: Container(
+                              width: 35,
+                              height: 32,
+                              alignment: Alignment.center,
+                              color: Colors.grey.shade300,
+                              child: const Icon(
+                                Icons.add,
+                                size: 18,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          )
+                        : InkWell(
+                            onTap: () => increaseQuantity(product),
+                            child: Container(
+                              width: 35,
+                              height: 32,
+                              alignment: Alignment.center,
+                              child: const Icon(
+                                Icons.add,
+                                size: 18,
+                              ),
+                            ),
+                          )
                   ],
                 ),
               ),

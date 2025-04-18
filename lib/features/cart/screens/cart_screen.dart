@@ -49,11 +49,8 @@ class _CartScreenState extends State<CartScreen> {
                       onFieldSubmitted: navigateToSearchScreen,
                       decoration: InputDecoration(
                         prefixIcon: InkWell(
-                          onTap: () {},
                           child: const Padding(
-                            padding: EdgeInsets.only(
-                              left: 6,
-                            ),
+                            padding: EdgeInsets.only(left: 6),
                             child: Icon(
                               Icons.search,
                               color: Colors.black,
@@ -65,15 +62,11 @@ class _CartScreenState extends State<CartScreen> {
                         fillColor: Colors.white,
                         contentPadding: const EdgeInsets.only(top: 10),
                         border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(7)),
                           borderSide: BorderSide.none,
                         ),
                         enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(7)),
                           borderSide: BorderSide(
                             color: Colors.black38,
                             width: 1,
@@ -114,18 +107,12 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ),
             const SizedBox(height: 15),
-            Container(
-              color: Colors.black12.withValues(alpha: 0.08),
-              height: 1,
-            ),
-            const SizedBox(height: 5),
             ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
               itemCount: user.cart.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                return CartProduct(
-                  index: index,
-                );
+                return CartProduct(index: index);
               },
             ),
           ],
