@@ -39,24 +39,44 @@ class _DealOfDayState extends State<DealOfDay> {
                       ),
                     ),
                   ),
+                  // Adding for dynamic height of the ProductCard
                   Padding(
                     padding: const EdgeInsets.all(5),
-                    child: GridView.builder(
-                      itemCount: length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 3 / 5,
-                      ),
-                      itemBuilder: (context, index) => GestureDetector(
-                        onTap: () => navigateToDetailScreen(index),
-                        child: ProductCard(
-                          product: products[index],
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: List.generate(
+                        products.length,
+                        (index) => GestureDetector(
+                          onTap: () => navigateToDetailScreen(index),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width / 2 - 12,
+                            child: ProductCard(
+                              product: products[index],
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(5),
+                  //   child: GridView.builder(
+                  //     itemCount: length,
+                  //     shrinkWrap: true,
+                  //     physics: const NeverScrollableScrollPhysics(),
+                  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  //       crossAxisCount: 2,
+                  //       childAspectRatio: 3 / 5,
+                  //     ),
+                  //     itemBuilder: (context, index) => GestureDetector(
+                  //       onTap: () => navigateToDetailScreen(index),
+                  //       child: ProductCard(
+                  //         product: products[index],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   if (products.length > 4 && length == 4)
                     Container(
                       padding: const EdgeInsets.all(15),
