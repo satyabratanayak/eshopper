@@ -4,12 +4,26 @@ import 'package:eshopper/common/widgets/star_ratings.dart';
 import 'package:eshopper/models/product.dart';
 import 'package:flutter/material.dart';
 
+enum UserType {
+  admin,
+  user,
+}
+
+enum CardType {
+  vertical,
+  horizontal,
+}
+
 class ProductCard extends StatefulWidget {
   final Product product;
+  final UserType userType;
+  final CardType cardType;
 
   const ProductCard({
     super.key,
     required this.product,
+    this.userType = UserType.user,
+    this.cardType = CardType.vertical,
   });
 
   @override

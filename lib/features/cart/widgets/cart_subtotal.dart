@@ -20,9 +20,7 @@ class CartSubtotal extends StatelessWidget {
         children: [
           const Text(
             StringConstants.subTotal,
-            style: TextStyle(
-              fontSize: 20,
-            ),
+            style: TextStyle(fontSize: 20),
           ),
           Text(
             ' ₹$sum',
