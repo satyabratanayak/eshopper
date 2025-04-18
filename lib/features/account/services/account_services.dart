@@ -4,6 +4,7 @@ import 'package:eshopper/constants/error_handling.dart';
 import 'package:eshopper/constants/global_variables.dart';
 import 'package:eshopper/constants/utils.dart';
 import 'package:eshopper/features/auth/screens/auth_screen.dart';
+import 'package:eshopper/features/auth/services/auth_service.dart';
 import 'package:eshopper/models/order.dart';
 import 'package:eshopper/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,34 @@ class AccountServices {
       showGlobalSnackBar(e.toString());
     }
     return orderList;
+  }
+
+  void goToAdmin(BuildContext context) async {
+    try {
+      logOut(context);
+      AuthService authService = AuthService();
+      authService.signInUser(
+        context: context,
+        email: 'test@email.com',
+        password: 'test@123',
+      );
+    } catch (e) {
+      showGlobalSnackBar(e.toString());
+    }
+  }
+
+  void goToBuyer(BuildContext context) async {
+    try {
+      logOut(context);
+      AuthService authService = AuthService();
+      authService.signInUser(
+        context: context,
+        email: 'user@email.com',
+        password: 'user@123',
+      );
+    } catch (e) {
+      showGlobalSnackBar(e.toString());
+    }
   }
 
   void logOut(BuildContext context) async {

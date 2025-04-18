@@ -7,15 +7,15 @@ import 'package:eshopper/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class BottomBar extends StatefulWidget {
-  static const String routeName = '/actual-home';
-  const BottomBar({super.key});
+class UserPage extends StatefulWidget {
+  static const String routeName = '/home-page';
+  const UserPage({super.key});
 
   @override
-  State<BottomBar> createState() => _BottomBarState();
+  State<UserPage> createState() => _UserPageState();
 }
 
-class _BottomBarState extends State<BottomBar> {
+class _UserPageState extends State<UserPage> {
   int _page = 0;
   double bottomBarWidth = 42;
   double bottomBarBorderWidth = 5;
@@ -25,12 +25,6 @@ class _BottomBarState extends State<BottomBar> {
     const AccountScreen(),
     const CartScreen(),
   ];
-
-  void updatePage(int page) {
-    setState(() {
-      _page = page;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,5 +108,11 @@ class _BottomBarState extends State<BottomBar> {
         ],
       ),
     );
+  }
+
+  void updatePage(int page) {
+    setState(() {
+      _page = page;
+    });
   }
 }

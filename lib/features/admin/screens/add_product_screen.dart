@@ -23,6 +23,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController productNameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+  final TextEditingController mrpController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
   final AdminServices adminServices = AdminServices();
 
@@ -123,13 +124,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
+                  controller: mrpController,
+                  hintText: StringConstants.productMrp,
+                  textInputType: TextInputType.number,
+                ),
+                CustomTextField(
                   controller: priceController,
                   hintText: StringConstants.productPrice,
+                  textInputType: TextInputType.number,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   controller: quantityController,
                   hintText: StringConstants.productQuantity,
+                  textInputType: TextInputType.number,
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
@@ -188,6 +196,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         context: context,
         name: productNameController.text,
         description: descriptionController.text,
+        mrp: double.parse(mrpController.text),
         price: double.parse(priceController.text),
         quantity: double.parse(quantityController.text),
         category: category,

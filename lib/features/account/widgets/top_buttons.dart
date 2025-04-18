@@ -18,7 +18,7 @@ class TopButtons extends StatelessWidget {
             ),
             AccountButton(
               text: StringConstants.applyForSeller,
-              onTap: () {},
+              onTap: () => AccountServices().goToAdmin(context),
             ),
           ],
         ),

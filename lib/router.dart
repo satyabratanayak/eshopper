@@ -1,4 +1,4 @@
-import 'package:eshopper/common/widgets/bottom_bar.dart';
+import 'package:eshopper/common/widgets/user_page.dart';
 import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/address/screens/address_screen.dart';
 import 'package:eshopper/features/admin/screens/add_product_screen.dart';
@@ -25,10 +25,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const HomeScreen(),
       );
-    case BottomBar.routeName:
+    case UserPage.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const BottomBar(),
+        builder: (_) => const UserPage(),
       );
     case AddProductScreen.routeName:
       return MaterialPageRoute(
