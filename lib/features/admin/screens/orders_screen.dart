@@ -1,5 +1,5 @@
 import 'package:eshopper/common/widgets/loader.dart';
-import 'package:eshopper/features/account/widgets/single_product.dart';
+import 'package:eshopper/common/widgets/product_card.dart';
 import 'package:eshopper/features/admin/services/admin_services.dart';
 import 'package:eshopper/features/order_details/screens/order_details.dart';
 import 'package:eshopper/models/order.dart';
@@ -21,29 +21,33 @@ class _OrdersScreenState extends State<OrdersScreen> {
     final currentOrders = orders;
     return currentOrders == null
         ? const Loader()
-        : GridView.builder(
-            itemCount: currentOrders.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-            ),
-            itemBuilder: (context, index) {
-              final orderData = currentOrders[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    OrderDetailScreen.routeName,
-                    arguments: orderData,
+        : Padding(
+            padding: const EdgeInsets.all(5),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: List.generate(
+                currentOrders.length,
+                (index) {
+                  final orderData = currentOrders[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        OrderDetailScreen.routeName,
+                        arguments: orderData,
+                      );
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width / 2 - 12,
+                      child: ProductCard(
+                        product: orderData.products[index],
+                      ),
+                    ),
                   );
                 },
-                child: SizedBox(
-                  height: 140,
-                  child: SingleProduct(
-                    image: orderData.products[0].images[0],
-                  ),
-                ),
-              );
-            },
+              ),
+            ),
           );
   }
 

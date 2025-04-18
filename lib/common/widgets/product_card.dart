@@ -1,4 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:eshopper/common/widgets/app_network_image.dart';
+import 'package:eshopper/common/widgets/star_ratings.dart';
 import 'package:eshopper/models/product.dart';
 import 'package:flutter/material.dart';
 
@@ -14,50 +16,10 @@ class ProductCard extends StatefulWidget {
   State<ProductCard> createState() => _ProductCardState();
 }
 
-class StarRating extends StatelessWidget {
-  final double rating;
-  final int reviewCount;
-  final Color color;
-
-  const StarRating({
-    super.key,
-    required this.rating,
-    required this.reviewCount,
-    this.color = Colors.orange,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    int fullStars = rating.floor();
-    bool hasHalfStar =
-        (rating - fullStars) >= 0.25 && (rating - fullStars) < 0.75;
-    int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-
-    return Row(
-      children: [
-        Text(
-          rating.toStringAsFixed(1),
-          style: const TextStyle(fontSize: 14),
-        ),
-        const SizedBox(width: 2),
-        ...List.generate(
-            fullStars, (index) => Icon(Icons.star, color: color, size: 16)),
-        if (hasHalfStar) Icon(Icons.star_half, color: color, size: 16),
-        ...List.generate(emptyStars,
-            (index) => Icon(Icons.star_border, color: color, size: 16)),
-        const SizedBox(width: 5),
-        Text(
-          '($reviewCount)',
-          style: const TextStyle(fontSize: 12),
-        ),
-      ],
-    );
-  }
-}
-
 class _ProductCardState extends State<ProductCard> {
   int _current = 0;
   double avgRating = 0;
+  double offerPercent = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -80,17 +42,13 @@ class _ProductCardState extends State<ProductCard> {
                 children: [
                   CarouselSlider(
                     items: widget.product.images.map(
-                      (i) {
-                        return Builder(
-                          builder: (BuildContext context) => Image.network(
-                            i,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          ),
-                        );
+                      (image) {
+                        return AppNetworkImage(imageUrl: image);
                       },
                     ).toList(),
                     options: CarouselOptions(
+                      animateToClosest: true,
+                      autoPlay: true,
                       height: double.infinity,
                       viewportFraction: 1.0,
                       onPageChanged: (index, reason) {
@@ -127,50 +85,54 @@ class _ProductCardState extends State<ProductCard> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(5),
-            child: Text(
-              widget.product.name,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-          StarRating(
-            rating: avgRating,
-            reviewCount: widget.product.rating.length,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5),
-            child: Row(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    '${100 - ((widget.product.price / widget.product.mrp) * 100).ceil()}% off',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                Text(
+                  widget.product.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 16),
                 ),
-                SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                SizedBox(height: 5),
+                StarRating(
+                  rating: avgRating,
+                  reviewCount: widget.product.rating.length,
+                ),
+                SizedBox(height: 5),
+                Row(
                   children: [
-                    Text(
-                      '₹${widget.product.price}',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    Text(
-                      '₹${widget.product.mrp}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        decoration: TextDecoration.lineThrough,
+                    Container(
+                      padding: EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(4),
                       ),
+                      child: Text(
+                        '${offerPercent.toInt()}% off',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '₹${widget.product.price}',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        Text(
+                          '₹${widget.product.mrp}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -185,7 +147,20 @@ class _ProductCardState extends State<ProductCard> {
   @override
   void initState() {
     setRating();
+    setOfferPercent();
     super.initState();
+  }
+
+  void setOfferPercent() {
+    setState(() {
+      final double price = widget.product.price;
+      final double mrp = widget.product.mrp;
+      if (price == 0 || mrp == 0) {
+        offerPercent = 0.0;
+        return;
+      }
+      offerPercent = ((mrp - price) / mrp * 100).ceilToDouble();
+    });
   }
 
   void setRating() {
