@@ -1,5 +1,5 @@
+import 'package:eshopper/common/product_card/product_card.dart';
 import 'package:eshopper/common/widgets/loader.dart';
-import 'package:eshopper/common/widgets/product_card.dart';
 import 'package:eshopper/features/admin/services/admin_services.dart';
 import 'package:eshopper/features/order_details/screens/order_details.dart';
 import 'package:eshopper/models/order.dart';
@@ -41,6 +41,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width / 2 - 12,
                       child: ProductCard(
+                        cardType: CardType.vertical,
                         product: orderData.products[index],
                       ),
                     ),

@@ -34,9 +34,14 @@ class ProductDetailsServices {
         response: res,
         context: context,
         onSuccess: () {
-          User user =
-              userProvider.user.copyWith(cart: jsonDecode(res.body)['cart']);
-          userProvider.setUserFromModel(user);
+          final cartJson = jsonDecode(res.body)['cart'];
+          final cartItems = List<CartItem>.from(
+            cartJson.map((item) => CartItem.fromMap(item)),
+          );
+
+          final updatedUser = userProvider.user.copyWith(cart: cartItems);
+
+          userProvider.setUserFromModel(updatedUser);
         },
       );
     } catch (e) {

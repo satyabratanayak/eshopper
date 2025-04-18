@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:eshopper/models/product.dart';
+
 class User {
   final String id;
   final String name;
@@ -8,7 +10,7 @@ class User {
   final String address;
   final String type;
   final String token;
-  final List<dynamic> cart;
+  final List<CartItem> cart;
 
   User({
     required this.id,
@@ -32,13 +34,26 @@ class User {
       address: map['address'] ?? '',
       type: map['type'] ?? '',
       token: map['token'] ?? '',
-      cart: List<Map<String, dynamic>>.from(
-        map['cart']?.map(
-          (x) => Map<String, dynamic>.from(x),
-        ),
+      cart: List<CartItem>.from(
+        (map['cart'] ?? []).map((x) => CartItem.fromMap(x)),
       ),
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      '_id': id,
+      'name': name,
+      'email': email,
+      'password': password,
+      'address': address,
+      'type': type,
+      'token': token,
+      'cart': cart.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  String toJson() => json.encode(toMap());
 
   User copyWith({
     String? id,
@@ -48,7 +63,7 @@ class User {
     String? address,
     String? type,
     String? token,
-    List<dynamic>? cart,
+    List<CartItem>? cart,
   }) {
     return User(
       id: id ?? this.id,
@@ -61,19 +76,32 @@ class User {
       cart: cart ?? this.cart,
     );
   }
+}
 
-  String toJson() => json.encode(toMap());
+class CartItem {
+  final Product product;
+  final int quantity;
+  final String id;
+
+  CartItem({
+    required this.product,
+    required this.quantity,
+    required this.id,
+  });
+
+  factory CartItem.fromMap(Map<String, dynamic> map) {
+    return CartItem(
+      product: Product.fromMap(map['product']),
+      quantity: map['quantity'] ?? 0,
+      id: map['_id'] ?? '',
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
-      'email': email,
-      'password': password,
-      'address': address,
-      'type': type,
-      'token': token,
-      'cart': cart,
+      'product': product.toMap(),
+      'quantity': quantity,
+      '_id': id,
     };
   }
 }

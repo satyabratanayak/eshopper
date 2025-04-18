@@ -9,6 +9,7 @@ class AppNetworkImage extends StatelessWidget {
   final BorderRadius? borderRadius;
   final Widget? placeholder;
   final Widget? errorWidget;
+  final double aspectRatio;
 
   const AppNetworkImage({
     super.key,
@@ -19,12 +20,13 @@ class AppNetworkImage extends StatelessWidget {
     this.borderRadius,
     this.placeholder,
     this.errorWidget,
+    this.aspectRatio = 1,
   });
 
   @override
   Widget build(BuildContext context) {
     final image = AspectRatio(
-      aspectRatio: 1,
+      aspectRatio: aspectRatio,
       child: CachedNetworkImage(
         imageUrl: imageUrl,
         fit: fit,

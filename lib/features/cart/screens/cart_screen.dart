@@ -1,8 +1,8 @@
+import 'package:eshopper/common/product_card/product_card.dart';
 import 'package:eshopper/common/widgets/custom_button.dart';
 import 'package:eshopper/constants/global_variables.dart';
 import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/address/screens/address_screen.dart';
-import 'package:eshopper/features/cart/widgets/cart_product.dart';
 import 'package:eshopper/features/cart/widgets/cart_subtotal.dart';
 import 'package:eshopper/features/home/widgets/address_box.dart';
 import 'package:eshopper/features/search/screens/search_screen.dart';
@@ -22,9 +22,7 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     final user = context.watch<UserProvider>().user;
     int sum = 0;
-    user.cart
-        .map((e) => sum += e['quantity'] * e['product']['price'] as int)
-        .toList();
+    user.cart.map((e) => sum += e.quantity * e.product.price.toInt()).toList();
 
     return Scaffold(
       appBar: PreferredSize(
@@ -112,7 +110,13 @@ class _CartScreenState extends State<CartScreen> {
               itemCount: user.cart.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                return CartProduct(index: index);
+                final productCart =
+                    context.watch<UserProvider>().user.cart[index];
+                return ProductCard(
+                  cardType: CardType.horizontal,
+                  product: productCart.product,
+                  quantity: productCart.quantity,
+                );
               },
             ),
           ],

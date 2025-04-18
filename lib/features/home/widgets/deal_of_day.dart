@@ -1,5 +1,5 @@
+import 'package:eshopper/common/product_card/product_card.dart';
 import 'package:eshopper/common/widgets/loader.dart';
-import 'package:eshopper/common/widgets/product_card.dart';
 import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/home/services/home_services.dart';
 import 'package:eshopper/features/product_details/screens/product_details_screen.dart';
@@ -39,7 +39,6 @@ class _DealOfDayState extends State<DealOfDay> {
                       ),
                     ),
                   ),
-                  // Adding for dynamic height of the ProductCard
                   Padding(
                     padding: const EdgeInsets.all(5),
                     child: Wrap(
@@ -52,6 +51,7 @@ class _DealOfDayState extends State<DealOfDay> {
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width / 2 - 12,
                             child: ProductCard(
+                              cardType: CardType.vertical,
                               product: products[index],
                             ),
                           ),
@@ -59,24 +59,6 @@ class _DealOfDayState extends State<DealOfDay> {
                       ),
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(5),
-                  //   child: GridView.builder(
-                  //     itemCount: length,
-                  //     shrinkWrap: true,
-                  //     physics: const NeverScrollableScrollPhysics(),
-                  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  //       crossAxisCount: 2,
-                  //       childAspectRatio: 3 / 5,
-                  //     ),
-                  //     itemBuilder: (context, index) => GestureDetector(
-                  //       onTap: () => navigateToDetailScreen(index),
-                  //       child: ProductCard(
-                  //         product: products[index],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                   if (products.length > 4 && length == 4)
                     Container(
                       padding: const EdgeInsets.all(15),
@@ -89,9 +71,7 @@ class _DealOfDayState extends State<DealOfDay> {
                         },
                         child: Text(
                           StringConstants.seeAllDeals,
-                          style: TextStyle(
-                            color: Colors.teal,
-                          ),
+                          style: TextStyle(color: Colors.teal),
                         ),
                       ),
                     ),

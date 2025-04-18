@@ -1,33 +1,33 @@
+import 'package:eshopper/common/widgets/app_network_image.dart';
 import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/constants/utils.dart';
 import 'package:eshopper/features/cart/services/cart_services.dart';
 import 'package:eshopper/features/product_details/services/product_details_services.dart';
 import 'package:eshopper/models/product.dart';
-import 'package:eshopper/providers/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class CartProduct extends StatefulWidget {
-  final int index;
-  const CartProduct({
+class HorizontalCard extends StatefulWidget {
+  final Product product;
+  final int? quantity;
+  const HorizontalCard({
     super.key,
-    required this.index,
+    required this.product,
+    this.quantity,
   });
 
   @override
-  State<CartProduct> createState() => _CartProductState();
+  State<HorizontalCard> createState() => _HorizontalCardState();
 }
 
-class _CartProductState extends State<CartProduct> {
+class _HorizontalCardState extends State<HorizontalCard> {
   final ProductDetailsServices productDetailsServices =
       ProductDetailsServices();
   final CartServices cartServices = CartServices();
 
   @override
   Widget build(BuildContext context) {
-    final productCart = context.watch<UserProvider>().user.cart[widget.index];
-    final product = Product.fromMap(productCart['product']);
-    final quantity = productCart['quantity'];
+    final product = widget.product;
+    final quantity = widget.quantity ?? 1;
 
     return Column(
       children: [
@@ -41,11 +41,12 @@ class _CartProductState extends State<CartProduct> {
           margin: const EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             children: [
-              Image.network(
-                product.images[0],
-                fit: BoxFit.cover,
+              SizedBox(
                 height: 135,
-                width: 135,
+                child: AppNetworkImage(
+                  imageUrl: product.images[0],
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
               SizedBox(width: 10),
               Flexible(
@@ -195,7 +196,7 @@ class _CartProductState extends State<CartProduct> {
                                 size: 18,
                               ),
                             ),
-                          )
+                          ),
                   ],
                 ),
               ),
