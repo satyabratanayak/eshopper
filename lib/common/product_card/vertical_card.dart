@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:eshopper/common/product_card/product_card.dart';
 import 'package:eshopper/common/widgets/app_network_image.dart';
 import 'package:eshopper/common/widgets/star_ratings.dart';
 import 'package:eshopper/models/product.dart';
@@ -6,10 +7,14 @@ import 'package:flutter/material.dart';
 
 class VerticalCard extends StatefulWidget {
   final Product product;
+  final bool autoScroll;
+  final UserType userType;
 
   const VerticalCard({
     super.key,
     required this.product,
+    required this.autoScroll,
+    required this.userType,
   });
 
   @override
@@ -48,7 +53,7 @@ class _VerticalCardState extends State<VerticalCard> {
                     ).toList(),
                     options: CarouselOptions(
                       animateToClosest: true,
-                      autoPlay: true,
+                      autoPlay: widget.autoScroll,
                       height: double.infinity,
                       viewportFraction: 1.0,
                       onPageChanged: (index, reason) {

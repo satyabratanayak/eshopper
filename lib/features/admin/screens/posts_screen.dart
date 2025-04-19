@@ -1,114 +1,9 @@
-import 'package:eshopper/common/widgets/app_network_image.dart';
+import 'package:eshopper/common/product_card/product_card.dart';
 import 'package:eshopper/common/widgets/loader.dart';
-import 'package:eshopper/common/widgets/star_ratings.dart';
-import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/admin/screens/add_product_screen.dart';
 import 'package:eshopper/features/admin/services/admin_services.dart';
 import 'package:eshopper/models/product.dart';
 import 'package:flutter/material.dart';
-
-class AddProductCard extends StatelessWidget {
-  final Product productData;
-
-  const AddProductCard({
-    super.key,
-    required this.productData,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // Average Rating Calculation
-    double avgRating = 0;
-    if (productData.rating.isNotEmpty) {
-      double totalRating =
-          productData.rating.fold(0, (sum, r) => sum + r.rating);
-      avgRating = totalRating / productData.rating.length;
-    }
-
-    // Offer Percent Calculation
-    double offerPercent = 0;
-    if (productData.mrp > 0) {
-      offerPercent = 100 - ((productData.price / productData.mrp) * 100);
-    }
-
-    return Container(
-      margin: EdgeInsets.all(5),
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AspectRatio(
-            aspectRatio: 1,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: AppNetworkImage(imageUrl: productData.images[0]),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  productData.name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 5),
-                StarRating(
-                  rating: avgRating,
-                  reviewCount: productData.rating.length,
-                ),
-                SizedBox(height: 5),
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        '${offerPercent.toInt()}% off',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '₹${productData.price}',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        Text(
-                          '₹${productData.mrp}',
-                          style: TextStyle(
-                            fontSize: 12,
-                            decoration: TextDecoration.lineThrough,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class PostsScreen extends StatefulWidget {
   const PostsScreen({super.key});
@@ -133,22 +28,27 @@ class _PostsScreenState extends State<PostsScreen> {
                 children: List.generate(
                   products.length,
                   (index) {
-                    final productData = products[index];
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width / 2 - 4,
-                      child: AddProductCard(productData: productData),
+                    final product = products[index];
+                    return ProductCard(
+                      cardType: CardType.horizontal,
+                      product: product,
+                      autoScroll: false,
+                      userType: UserType.admin,
+                      onDelete: () {
+                        deleteProduct(product, index);
+                      },
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          AddProductScreen.routeName,
+                          arguments: product,
+                        );
+                      },
                     );
                   },
                 ),
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: navigateToAddProduct,
-              tooltip: StringConstants.addProduct,
-              child: const Icon(Icons.add),
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
           );
   }
 
@@ -172,9 +72,5 @@ class _PostsScreenState extends State<PostsScreen> {
   void initState() {
     super.initState();
     fetchAllProducts();
-  }
-
-  void navigateToAddProduct() {
-    Navigator.pushNamed(context, AddProductScreen.routeName);
   }
 }

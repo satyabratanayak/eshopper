@@ -31,9 +31,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const UserPage(),
       );
     case AddProductScreen.routeName:
+      final product = routeSettings.arguments as Product?;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const AddProductScreen(),
+        builder: (_) => AddProductScreen(product: product),
       );
 
     case CategoryDealsScreen.routeName:

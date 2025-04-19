@@ -17,22 +17,40 @@ class ProductCard extends StatelessWidget {
   final UserType userType;
   final CardType cardType;
   final Product product;
+  final bool autoScroll;
   final int? quantity;
+  final VoidCallback? onDelete;
+  final VoidCallback? onTap;
   const ProductCard({
     super.key,
     this.userType = UserType.user,
     this.cardType = CardType.vertical,
     required this.product,
     this.quantity,
+    this.autoScroll = true,
+    this.onDelete,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return cardType == CardType.horizontal
-        ? HorizontalCard(
-            product: product,
-            quantity: quantity,
+        ? GestureDetector(
+            onTap: onTap,
+            child: HorizontalCard(
+              product: product,
+              quantity: quantity,
+              userType: userType,
+              onDelete: onDelete,
+            ),
           )
-        : VerticalCard(product: product);
+        : GestureDetector(
+            onTap: onTap,
+            child: VerticalCard(
+              product: product,
+              autoScroll: autoScroll,
+              userType: userType,
+            ),
+          );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:eshopper/constants/global_variables.dart';
 import 'package:eshopper/constants/string_constants.dart';
+import 'package:eshopper/features/admin/screens/add_product_screen.dart';
 import 'package:eshopper/features/admin/screens/analtyics_screen.dart';
 import 'package:eshopper/features/admin/screens/orders_screen.dart';
 import 'package:eshopper/features/admin/screens/posts_screen.dart';
@@ -27,34 +28,41 @@ class _AdminScreenState extends State<AdminScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50),
+        preferredSize: const Size.fromHeight(60),
         child: AppBar(
           flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: GlobalVariables.appBarGradient,
-            ),
+            decoration:
+                const BoxDecoration(gradient: GlobalVariables.appBarGradient),
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                alignment: Alignment.topLeft,
-                child: Image.asset(
-                  AssetPath.amazonPng,
-                  width: 120,
-                  height: 45,
-                  color: Colors.black,
-                ),
-              ),
               const Text(
                 StringConstants.admin,
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
-              )
+              ),
             ],
           ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: ElevatedButton(
+                child: Row(
+                  children: [
+                    Icon(Icons.add),
+                    SizedBox(width: 5),
+                    Text('Add Product'),
+                  ],
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, AddProductScreen.routeName);
+                },
+              ),
+            ),
+          ],
         ),
       ),
       body: pages[_page],
@@ -80,9 +88,7 @@ class _AdminScreenState extends State<AdminScreen> {
                   ),
                 ),
               ),
-              child: const Icon(
-                Icons.home_outlined,
-              ),
+              child: const Icon(Icons.home_outlined),
             ),
             label: '',
           ),
