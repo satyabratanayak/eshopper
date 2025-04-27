@@ -191,7 +191,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 child: Stepper(
                   currentStep: currentStep,
                   controlsBuilder: (context, details) {
-                    if (user.type == DBConstants.admin) {
+                    if (user.type == DBConstants.admin && currentStep < 3) {
                       return CustomButton(
                         text: StringConstants.done,
                         color: GlobalVariables.secondaryColor,
@@ -243,7 +243,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     );
   }
 
-  // !!! ONLY FOR ADMIN!!!
   void changeOrderStatus(int status) {
     adminServices.changeOrderStatus(
       context: context,
@@ -260,7 +259,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   @override
   void initState() {
     super.initState();
-    currentStep = widget.order.status;
+    currentStep = widget.order.status.clamp(0, 3);
   }
 
   void navigateToSearchScreen(String query) {

@@ -42,7 +42,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       width: MediaQuery.of(context).size.width / 2 - 12,
                       child: ProductCard(
                         cardType: CardType.vertical,
-                        product: orderData.products[index],
+                        product: orderData.products[0],
                       ),
                     ),
                   );
