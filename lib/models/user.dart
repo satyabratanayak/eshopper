@@ -76,6 +76,10 @@ class User {
       cart: cart ?? this.cart,
     );
   }
+
+  List<Map<String, dynamic>> cartToJson() {
+    return cart.map((e) => e.toMap()).toList();
+  }
 }
 
 class CartItem {
@@ -99,7 +103,9 @@ class CartItem {
 
   Map<String, dynamic> toMap() {
     return {
-      'product': product.toMap(),
+      'product': {
+        '_id': product.id,
+      },
       'quantity': quantity,
       '_id': id,
     };

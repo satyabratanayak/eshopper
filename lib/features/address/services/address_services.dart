@@ -26,7 +26,7 @@ class AddressServices {
             'x-auth-token': userProvider.user.token,
           },
           body: jsonEncode({
-            'cart': userProvider.user.cart,
+            'cart': userProvider.user.cartToJson(),
             'address': address,
             'totalPrice': totalSum,
           }));
