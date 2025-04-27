@@ -308,6 +308,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   text: StringConstants.sell,
                   color: GlobalVariables.secondaryColor,
                   onTap: sellProduct,
+                  isEnabled: productNameController.text.isNotEmpty &&
+                      descriptionController.text.isNotEmpty &&
+                      mrpController.text.isNotEmpty &&
+                      priceController.text.isNotEmpty &&
+                      quantityController.text.isNotEmpty &&
+                      category.isNotEmpty &&
+                      images.isNotEmpty,
                 ),
               ],
             ),

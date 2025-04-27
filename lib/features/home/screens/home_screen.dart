@@ -57,15 +57,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         fillColor: Colors.white,
                         contentPadding: const EdgeInsets.only(top: 10),
                         border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(7)),
                           borderSide: BorderSide.none,
                         ),
                         enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(7)),
                           borderSide: BorderSide(
                             color: Colors.black38,
                             width: 1,

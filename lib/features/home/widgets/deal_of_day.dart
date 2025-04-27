@@ -1,5 +1,5 @@
-import 'package:eshopper/common/product_card/product_card.dart';
 import 'package:eshopper/common/widgets/loader.dart';
+import 'package:eshopper/common/widgets/product_card.dart';
 import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/home/services/home_services.dart';
 import 'package:eshopper/features/product_details/screens/product_details_screen.dart';

@@ -1,8 +1,7 @@
 import 'package:eshopper/common/widgets/loader.dart';
-import 'package:eshopper/constants/global_variables.dart';
+import 'package:eshopper/common/widgets/product_card.dart';
 import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/account/services/account_services.dart';
-import 'package:eshopper/features/account/widgets/single_product.dart';
 import 'package:eshopper/features/order_details/screens/order_details.dart';
 import 'package:eshopper/models/order.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +34,6 @@ class _OrdersState extends State<Orders> {
 
     return Column(
       children: [
-        // Header
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Row(
@@ -48,31 +46,18 @@ class _OrdersState extends State<Orders> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              Text(
-                StringConstants.seeAll,
-                style: TextStyle(
-                  color: GlobalVariables.selectedNavBarColor,
-                ),
-              ),
             ],
           ),
         ),
         const SizedBox(height: 10),
-
-        // Order List
-        SizedBox(
-          height: 170,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: orders!.length,
-            itemBuilder: (context, index) {
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: List.generate(
+            orders!.length,
+            (index) {
               final order = orders![index];
               final products = order.products;
-              String? image;
-              if (products.isNotEmpty && products[0].images.isNotEmpty) {
-                image = products[0].images[0];
-              }
-
               return GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(
@@ -81,13 +66,19 @@ class _OrdersState extends State<Orders> {
                     arguments: order,
                   );
                 },
-                child: SingleProduct(
-                  image: image ?? AssetPath.defaultProductImage,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width / 2 - 12,
+                  child: ProductCard(
+                    cardType: CardType.vertical,
+                    product: products[0],
+                    totalProducts: order.products.length.toDouble(),
+                  ),
                 ),
               );
             },
           ),
         ),
+        const SizedBox(height: 20),
       ],
     );
   }

@@ -1,5 +1,5 @@
-import 'package:eshopper/common/product_card/product_card.dart';
 import 'package:eshopper/common/widgets/loader.dart';
+import 'package:eshopper/common/widgets/product_card.dart';
 import 'package:eshopper/features/admin/screens/add_product_screen.dart';
 import 'package:eshopper/features/admin/services/admin_services.dart';
 import 'package:eshopper/models/product.dart';

@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:eshopper/common/widgets/app_network_image.dart';
 import 'package:eshopper/common/widgets/custom_button.dart';
-import 'package:eshopper/common/widgets/stars.dart';
+import 'package:eshopper/common/widgets/star_ratings.dart';
 import 'package:eshopper/constants/global_variables.dart';
 import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/product_details/services/product_details_services.dart';
@@ -28,6 +29,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ProductDetailsServices();
   double avgRating = 0;
   double myRating = 0;
+  int _current = 0;
+  double offerPercent = 0.0;
 
   void addToCart() {
     productDetailsServices.addToCart(
@@ -43,59 +46,38 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
           flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: GlobalVariables.appBarGradient,
-            ),
+            decoration:
+                const BoxDecoration(gradient: GlobalVariables.appBarGradient),
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Container(
-                  height: 42,
-                  margin: const EdgeInsets.only(left: 15),
-                  child: Material(
-                    borderRadius: BorderRadius.circular(7),
-                    elevation: 1,
-                    child: TextFormField(
-                      onFieldSubmitted: navigateToSearchScreen,
-                      decoration: InputDecoration(
-                        prefixIcon: InkWell(
-                          onTap: () {},
-                          child: const Padding(
-                            padding: EdgeInsets.only(
-                              left: 6,
-                            ),
-                            child: Icon(
-                              Icons.search,
-                              color: Colors.black,
-                              size: 23,
-                            ),
-                          ),
+                child: Material(
+                  borderRadius: BorderRadius.circular(7),
+                  elevation: 1,
+                  child: TextFormField(
+                    onFieldSubmitted: navigateToSearchScreen,
+                    decoration: InputDecoration(
+                      prefixIcon: InkWell(
+                        onTap: () {},
+                        child: Icon(
+                          Icons.search,
+                          color: Colors.black,
+                          size: 24,
                         ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.only(top: 10),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
-                          borderSide: BorderSide(
-                            color: Colors.black38,
-                            width: 1,
-                          ),
-                        ),
-                        hintText: StringConstants.search,
-                        hintStyle: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17,
-                        ),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: const EdgeInsets.only(top: 10),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
+                        borderSide: BorderSide.none,
+                      ),
+                      hintText: StringConstants.search,
+                      hintStyle: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
                       ),
                     ),
                   ),
@@ -106,135 +88,242 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(widget.product.id),
-                  Stars(rating: avgRating),
+                  StarRating(
+                    rating: avgRating,
+                    reviewCount: widget.product.rating.length,
+                  ),
                 ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 20,
-                horizontal: 10,
-              ),
-              child: Text(
-                widget.product.name,
-                style: const TextStyle(
-                  fontSize: 15,
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Text(
+                  widget.product.name,
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
-            ),
-            CarouselSlider(
-              items: widget.product.images.map(
-                (i) {
-                  return Builder(
-                    builder: (BuildContext context) => Image.network(
-                      i,
-                      fit: BoxFit.contain,
-                      height: 200,
-                    ),
-                  );
-                },
-              ).toList(),
-              options: CarouselOptions(
-                viewportFraction: 1,
+              const SizedBox(height: 10),
+              SizedBox(
                 height: 300,
+                width: double.infinity,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CarouselSlider(
+                      items: widget.product.images.map(
+                        (i) {
+                          return AppNetworkImage(
+                            imageUrl: i,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ).toList(),
+                      options: CarouselOptions(
+                        viewportFraction: 1,
+                        height: double.infinity,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _current = index;
+                          });
+                        },
+                      ),
+                    ),
+                    Positioned(
+                      top: 15,
+                      left: 15,
+                      child: Container(
+                        padding: EdgeInsets.all(6),
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${offerPercent.toInt()}% off',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 15,
+                      left: MediaQuery.of(context).size.width / 2 - 20,
+                      child: Row(
+                        children:
+                            widget.product.images.asMap().entries.map((entry) {
+                          return Container(
+                            width: 8,
+                            height: 8,
+                            margin: const EdgeInsets.symmetric(horizontal: 2),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _current == entry.key
+                                  ? Colors.white
+                                  : Colors.white.withValues(alpha: 0.4),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 3,
+                      right: 20,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.favorite,
+                          color: Colors.grey,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          // TODO: Add wishlist service
+                          // productDetailsServices.addToWishlist(
+                          //   context: context,
+                          //   product: widget.product,
+                          // );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              color: Colors.black12,
-              height: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: RichText(
+              Divider(),
+              Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: const Text(
+                  StringConstants.limitedTimeDeal,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              RichText(
                 text: TextSpan(
                   text: StringConstants.dealPrice,
                   style: const TextStyle(
                     fontSize: 16,
                     color: Colors.black,
-                    fontWeight: FontWeight.bold,
                   ),
                   children: [
                     TextSpan(
                       text: '₹${widget.product.price}',
                       style: const TextStyle(
                         fontSize: 22,
-                        color: Colors.red,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(widget.product.description),
-            ),
-            Container(
-              color: Colors.black12,
-              height: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: CustomButton(
-                text: StringConstants.buyNow,
-                color: GlobalVariables.secondaryColor,
-                onTap: () {},
+              RichText(
+                text: TextSpan(
+                  text: StringConstants.mrp,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: '₹${widget.product.mrp}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: CustomButton(
-                text: StringConstants.addToCart,
-                onTap: addToCart,
-                color: GlobalVariables.secondaryColor,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Container(
-              color: Colors.black12,
-              height: 5,
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: Text(
-                StringConstants.rateProduct,
-                style: TextStyle(
-                  fontSize: 22,
+              Divider(),
+              Text(
+                StringConstants.productDescription,
+                style: const TextStyle(
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            RatingBar.builder(
-              initialRating: myRating,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemPadding: const EdgeInsets.symmetric(horizontal: 4),
-              itemBuilder: (context, _) => const Icon(
-                Icons.star,
+              Text(widget.product.description),
+              Divider(),
+              widget.product.quantity.toInt() == 0
+                  ? Text(
+                      StringConstants.outOfStock,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
+                    )
+                  : Text(
+                      '${StringConstants.inStock}: ${widget.product.quantity.toInt()}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+              const SizedBox(height: 10),
+              CustomButton(
+                text: StringConstants.buyNow,
                 color: GlobalVariables.secondaryColor,
+                //TODO: Add buy now functionality
+                onTap: () {},
+                isEnabled: widget.product.quantity.toInt() != 0,
               ),
-              onRatingUpdate: (rating) {
-                productDetailsServices.rateProduct(
-                  context: context,
-                  product: widget.product,
-                  rating: rating,
-                );
-              },
-            )
-          ],
+              const SizedBox(height: 10),
+              CustomButton(
+                text: StringConstants.addToCart,
+                onTap: addToCart,
+                color: GlobalVariables.secondaryColor,
+                isEnabled: widget.product.quantity.toInt() != 0,
+              ),
+              Divider(),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: Text(
+                  StringConstants.rateProduct,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              RatingBar.builder(
+                initialRating: myRating,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemPadding: const EdgeInsets.symmetric(horizontal: 4),
+                itemBuilder: (context, _) => const Icon(
+                  Icons.star,
+                  color: GlobalVariables.secondaryColor,
+                ),
+                onRatingUpdate: (rating) {
+                  productDetailsServices.rateProduct(
+                    context: context,
+                    product: widget.product,
+                    rating: rating,
+                  );
+                },
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -255,9 +344,38 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     if (totalRating != 0) {
       avgRating = totalRating / widget.product.rating.length;
     }
+
+    setOfferPercent();
+  }
+
+  void setOfferPercent() {
+    setState(() {
+      final double price = widget.product.price;
+      final double mrp = widget.product.mrp;
+      if (price == 0 || mrp == 0) {
+        offerPercent = 0.0;
+        return;
+      }
+      offerPercent = ((mrp - price) / mrp * 100).ceilToDouble();
+    });
   }
 
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
+  }
+}
+
+class Divider extends StatelessWidget {
+  const Divider({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      color: Colors.black12,
+      height: 2,
+    );
   }
 }

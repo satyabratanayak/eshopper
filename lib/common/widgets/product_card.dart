@@ -1,5 +1,6 @@
-import 'package:eshopper/common/product_card/product_card.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eshopper/common/widgets/app_network_image.dart';
+import 'package:eshopper/common/widgets/star_ratings.dart';
 import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/constants/utils.dart';
 import 'package:eshopper/features/admin/services/admin_services.dart';
@@ -8,13 +9,68 @@ import 'package:eshopper/features/product_details/services/product_details_servi
 import 'package:eshopper/models/product.dart';
 import 'package:flutter/material.dart';
 
-class HorizontalCard extends StatelessWidget {
+enum UserType {
+  admin,
+  user,
+}
+
+enum CardType {
+  vertical,
+  horizontal,
+}
+
+class ProductCard extends StatelessWidget {
+  final UserType userType;
+  final CardType cardType;
+  final Product product;
+  final bool autoScroll;
+  final double? totalProducts;
+  final int? quantity;
+  final VoidCallback? onDelete;
+  final VoidCallback? onTap;
+
+  const ProductCard({
+    super.key,
+    this.userType = UserType.user,
+    this.cardType = CardType.vertical,
+    required this.product,
+    this.quantity,
+    this.autoScroll = true,
+    this.onDelete,
+    this.onTap,
+    this.totalProducts,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return cardType == CardType.horizontal
+        ? GestureDetector(
+            onTap: onTap,
+            child: _HorizontalCard(
+              product: product,
+              quantity: quantity,
+              userType: userType,
+              onDelete: onDelete,
+            ),
+          )
+        : GestureDetector(
+            onTap: onTap,
+            child: _VerticalCard(
+              product: product,
+              autoScroll: autoScroll,
+              userType: userType,
+              totalProducts: totalProducts,
+            ),
+          );
+  }
+}
+
+class _HorizontalCard extends StatelessWidget {
   final Product product;
   final int? quantity;
   final UserType userType;
   final VoidCallback? onDelete;
-  HorizontalCard({
-    super.key,
+  _HorizontalCard({
     required this.product,
     this.quantity,
     required this.userType,
@@ -242,5 +298,205 @@ class HorizontalCard extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _VerticalCard extends StatefulWidget {
+  final Product product;
+  final bool autoScroll;
+  final UserType userType;
+  final double? totalProducts;
+
+  const _VerticalCard({
+    required this.product,
+    required this.autoScroll,
+    required this.userType,
+    this.totalProducts,
+  });
+
+  @override
+  State<_VerticalCard> createState() => _VerticalCardState();
+}
+
+class _VerticalCardState extends State<_VerticalCard> {
+  int _current = 0;
+  double avgRating = 0;
+  double offerPercent = 0.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final totalProducts = widget.totalProducts;
+
+    return Container(
+      margin: EdgeInsets.all(5),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AspectRatio(
+            aspectRatio: 1,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Stack(
+                children: [
+                  CarouselSlider(
+                    items: widget.product.images.map(
+                      (image) {
+                        return AppNetworkImage(imageUrl: image);
+                      },
+                    ).toList(),
+                    options: CarouselOptions(
+                      animateToClosest: true,
+                      autoPlay: widget.autoScroll,
+                      height: double.infinity,
+                      viewportFraction: 1.0,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          _current = index;
+                        });
+                      },
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
+                        children:
+                            widget.product.images.asMap().entries.map((entry) {
+                          return Container(
+                            width: 8,
+                            height: 8,
+                            margin: const EdgeInsets.symmetric(horizontal: 2),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _current == entry.key
+                                  ? Colors.white
+                                  : Colors.white.withValues(alpha: 0.4),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  if (totalProducts != null)
+                    Positioned(
+                      right: 10,
+                      top: 10,
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          totalProducts.toInt().toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.product.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 5),
+                StarRating(
+                  rating: avgRating,
+                  reviewCount: widget.product.rating.length,
+                ),
+                SizedBox(height: 5),
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        '${offerPercent.toInt()}% off',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '₹${widget.product.price}',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        Text(
+                          '₹${widget.product.mrp}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    setRating();
+    setOfferPercent();
+    super.initState();
+  }
+
+  void setOfferPercent() {
+    setState(() {
+      final double price = widget.product.price;
+      final double mrp = widget.product.mrp;
+      if (price == 0 || mrp == 0) {
+        offerPercent = 0.0;
+        return;
+      }
+      offerPercent = ((mrp - price) / mrp * 100).ceilToDouble();
+    });
+  }
+
+  void setRating() {
+    setState(() {
+      double totalRating = 0;
+      for (int i = 0; i < widget.product.rating.length; i++) {
+        totalRating += widget.product.rating[i].rating;
+      }
+
+      if (totalRating != 0) {
+        avgRating = totalRating / widget.product.rating.length;
+      }
+    });
   }
 }

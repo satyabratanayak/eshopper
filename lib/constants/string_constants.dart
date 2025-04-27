@@ -80,7 +80,7 @@ class StringConstants {
   static const seeAllDeals = 'See all deals';
   static const dealOfTheDay = 'Deals of the day';
   static const keepShopping = 'Keep shopping for';
-  static const viewOrderDetails = 'View order details';
+  static const orderDetails = 'Order details';
   static const orderDate = 'Order Date:';
   static const orderId = 'Order ID:';
   static const orderTotal = 'Order Total:';

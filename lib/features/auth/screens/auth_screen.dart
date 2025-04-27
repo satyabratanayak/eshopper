@@ -97,6 +97,9 @@ class _AuthScreenState extends State<AuthScreen> {
                               signUpUser();
                             }
                           },
+                          isEnabled: _emailController.text.isNotEmpty &&
+                              _passwordController.text.isNotEmpty &&
+                              _nameController.text.isNotEmpty,
                         )
                       ],
                     ),
@@ -150,6 +153,8 @@ class _AuthScreenState extends State<AuthScreen> {
                               signInUser();
                             }
                           },
+                          isEnabled: _emailController.text.isNotEmpty &&
+                              _passwordController.text.isNotEmpty,
                         )
                       ],
                     ),
