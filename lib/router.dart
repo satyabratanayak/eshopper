@@ -5,10 +5,11 @@ import 'package:eshopper/features/admin/screens/add_product_screen.dart';
 import 'package:eshopper/features/auth/screens/auth_screen.dart';
 import 'package:eshopper/features/home/screens/category_deals_screen.dart';
 import 'package:eshopper/features/home/screens/home_screen.dart';
+import 'package:eshopper/features/order_details/screens/all_orders.dart';
 import 'package:eshopper/features/order_details/screens/order_details.dart';
-import 'package:eshopper/features/order_details/screens/your_orders.dart';
 import 'package:eshopper/features/product_details/screens/product_details_screen.dart';
 import 'package:eshopper/features/search/screens/search_screen.dart';
+import 'package:eshopper/features/wishlist/screens/wishlist.dart';
 import 'package:eshopper/models/order.dart';
 import 'package:eshopper/models/product.dart';
 import 'package:flutter/material.dart';
@@ -78,10 +79,15 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           order: order,
         ),
       );
-    case YourOrdersScreen.routeName:
+    case AllOrdersScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => YourOrdersScreen(),
+        builder: (_) => AllOrdersScreen(),
+      );
+    case Wishlist.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => Wishlist(),
       );
     default:
       return MaterialPageRoute(

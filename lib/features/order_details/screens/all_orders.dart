@@ -8,15 +8,15 @@ import 'package:eshopper/features/search/screens/search_screen.dart';
 import 'package:eshopper/models/order.dart';
 import 'package:flutter/material.dart';
 
-class YourOrdersScreen extends StatefulWidget {
+class AllOrdersScreen extends StatefulWidget {
   static const routeName = '/your-orders';
-  const YourOrdersScreen({super.key});
+  const AllOrdersScreen({super.key});
 
   @override
-  State<YourOrdersScreen> createState() => _YourOrdersScreenState();
+  State<AllOrdersScreen> createState() => AllOrdersScreenState();
 }
 
-class _YourOrdersScreenState extends State<YourOrdersScreen> {
+class AllOrdersScreenState extends State<AllOrdersScreen> {
   final AccountServices accountServices = AccountServices();
   List<Order>? orders;
 
