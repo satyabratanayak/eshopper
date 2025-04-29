@@ -59,6 +59,7 @@ class StringConstants {
   static const password = 'Password';
   static const signUp = 'Sign Up';
   static const signIn = 'Sign In';
+  static const loading = 'Loading...';
   static const accountCreated =
       'Account created! Login with the same credentials!';
   static const search = 'Search Eshopper';

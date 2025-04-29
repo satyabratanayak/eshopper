@@ -6,12 +6,14 @@ class CustomTextField extends StatelessWidget {
   final String hintText;
   final TextInputType textInputType;
   final int maxLines;
+  final bool obscureText;
   const CustomTextField({
     super.key,
     required this.controller,
     required this.hintText,
     this.textInputType = TextInputType.text,
     this.maxLines = 1,
+    this.obscureText = false,
   });
 
   @override
@@ -19,15 +21,20 @@ class CustomTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
-          hintText: hintText,
-          border: const OutlineInputBorder(
-              borderSide: BorderSide(
-            color: Colors.black38,
-          )),
-          enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-            color: Colors.black38,
-          ))),
+        hintText: hintText,
+        border: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: const Color(0xFFE0E0E0),
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: const Color(0xFFE0E0E0),
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
       validator: (val) {
         if (val == null || val.isEmpty) {
           return '${StringConstants.enterYour} $hintText';
@@ -36,6 +43,7 @@ class CustomTextField extends StatelessWidget {
       },
       maxLines: maxLines,
       keyboardType: textInputType,
+      obscureText: obscureText,
     );
   }
 }
