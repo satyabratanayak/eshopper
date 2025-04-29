@@ -1,3 +1,4 @@
+import 'package:eshopper/common/widgets/custom_appbar.dart';
 import 'package:eshopper/common/widgets/custom_button.dart';
 import 'package:eshopper/common/widgets/product_card.dart';
 import 'package:eshopper/constants/global_variables.dart';
@@ -28,54 +29,7 @@ class _CartScreenState extends State<CartScreen> {
     }).toList();
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: GlobalVariables.appBarGradient,
-            ),
-          ),
-          title: Material(
-            borderRadius: BorderRadius.circular(7),
-            elevation: 1,
-            child: TextFormField(
-              onFieldSubmitted: navigateToSearchScreen,
-              decoration: InputDecoration(
-                prefixIcon: InkWell(
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 6),
-                    child: Icon(
-                      Icons.search,
-                      color: Colors.black,
-                      size: 24,
-                    ),
-                  ),
-                ),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.only(top: 10),
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(7)),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(7)),
-                  borderSide: BorderSide(
-                    color: Colors.black38,
-                    width: 1,
-                  ),
-                ),
-                hintText: StringConstants.search,
-                hintStyle: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 17,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(),
       body: SingleChildScrollView(
         child: Column(
           children: [

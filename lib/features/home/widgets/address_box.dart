@@ -30,21 +30,12 @@ class AddressBox extends StatelessWidget {
                 '${StringConstants.deliverTo} ${user.name} - ${user.address}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
+                  fontSize: 16,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(
-              left: 5,
-              top: 2,
-            ),
-            child: Icon(
-              Icons.arrow_drop_down_outlined,
-              size: 18,
-            ),
-          )
         ],
       ),
     );
