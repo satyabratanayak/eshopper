@@ -54,7 +54,7 @@ class _AdminScreenState extends State<AdminScreen> {
                   children: [
                     Icon(Icons.add),
                     SizedBox(width: 5),
-                    Text('Add Product'),
+                    Text(StringConstants.addProduct),
                   ],
                 ),
                 onPressed: () {

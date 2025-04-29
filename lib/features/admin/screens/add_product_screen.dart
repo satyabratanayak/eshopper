@@ -27,17 +27,18 @@ class AddProductScreen extends StatefulWidget {
 }
 
 class _AddProductScreenState extends State<AddProductScreen> {
-  final TextEditingController productNameController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController mrpController = TextEditingController();
-  final TextEditingController quantityController = TextEditingController();
+  final TextEditingController _productNameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _mrpController = TextEditingController();
+  final TextEditingController _quantityController = TextEditingController();
   final AdminServices adminServices = AdminServices();
 
   List<File> images = [];
   int _current = 0;
   final _addProductFormKey = GlobalKey<FormState>();
   bool isLoading = true;
+  bool isAddProductEnabled = false;
 
   List<String> productCategories = categoryList.map((e) => e.title).toList();
   String category = categoryList.first.title;
@@ -59,11 +60,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
         File file = await urlToFile(imageUrl);
         images.add(file);
       }
-      productNameController.text = product.name;
-      descriptionController.text = product.description;
-      mrpController.text = product.mrp.toString();
-      priceController.text = product.price.toString();
-      quantityController.text = product.quantity.toString();
+      _productNameController.text = product.name;
+      _descriptionController.text = product.description;
+      _mrpController.text = product.mrp.toString();
+      _priceController.text = product.price.toString();
+      _quantityController.text = product.quantity.toString();
       category = product.category;
     }
     setState(() {
@@ -71,10 +72,32 @@ class _AddProductScreenState extends State<AddProductScreen> {
     });
   }
 
+  void _updateButtonState() {
+    final isProductNameFilled = _productNameController.text.isNotEmpty;
+    final isDescriptionFilled = _descriptionController.text.isNotEmpty;
+    final isMrpFilled = _mrpController.text.isNotEmpty;
+    final isPriceFilled = _priceController.text.isNotEmpty;
+    final isQuantityFilled = _quantityController.text.isNotEmpty;
+    setState(() {
+      isAddProductEnabled = isProductNameFilled &&
+          isDescriptionFilled &&
+          isMrpFilled &&
+          isPriceFilled &&
+          isQuantityFilled &&
+          category.isNotEmpty &&
+          images.isNotEmpty;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     existingData();
+    _productNameController.addListener(_updateButtonState);
+    _descriptionController.addListener(_updateButtonState);
+    _mrpController.addListener(_updateButtonState);
+    _priceController.addListener(_updateButtonState);
+    _quantityController.addListener(_updateButtonState);
   }
 
   @override
@@ -255,30 +278,30 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                 const SizedBox(height: 30),
                 CustomTextField(
-                  controller: productNameController,
+                  controller: _productNameController,
                   hintText: StringConstants.productName,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
-                  controller: descriptionController,
+                  controller: _descriptionController,
                   hintText: StringConstants.productDescription,
                   maxLines: 5,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
-                  controller: mrpController,
+                  controller: _mrpController,
                   hintText: StringConstants.productMrp,
                   textInputType: TextInputType.number,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
-                  controller: priceController,
+                  controller: _priceController,
                   hintText: StringConstants.productPrice,
                   textInputType: TextInputType.number,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
-                  controller: quantityController,
+                  controller: _quantityController,
                   hintText: StringConstants.productQuantity,
                   textInputType: TextInputType.number,
                 ),
@@ -308,13 +331,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   text: StringConstants.sell,
                   color: GlobalVariables.secondaryColor,
                   onTap: sellProduct,
-                  isEnabled: productNameController.text.isNotEmpty &&
-                      descriptionController.text.isNotEmpty &&
-                      mrpController.text.isNotEmpty &&
-                      priceController.text.isNotEmpty &&
-                      quantityController.text.isNotEmpty &&
-                      category.isNotEmpty &&
-                      images.isNotEmpty,
+                  isEnabled: isAddProductEnabled,
                 ),
               ],
             ),
@@ -327,10 +344,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   void dispose() {
     super.dispose();
-    productNameController.dispose();
-    descriptionController.dispose();
-    priceController.dispose();
-    quantityController.dispose();
+    _productNameController.dispose();
+    _descriptionController.dispose();
+    _priceController.dispose();
+    _quantityController.dispose();
   }
 
   void selectImages() async {
@@ -344,11 +361,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (_addProductFormKey.currentState!.validate() && images.isNotEmpty) {
       adminServices.sellProduct(
         context: context,
-        name: productNameController.text,
-        description: descriptionController.text,
-        mrp: double.parse(mrpController.text),
-        price: double.parse(priceController.text),
-        quantity: double.parse(quantityController.text),
+        name: _productNameController.text,
+        description: _descriptionController.text,
+        mrp: double.parse(_mrpController.text),
+        price: double.parse(_priceController.text),
+        quantity: double.parse(_quantityController.text),
         category: category,
         images: images,
       );
