@@ -79,7 +79,7 @@ class AuthService {
           if (!context.mounted) return;
           Navigator.pushNamedAndRemoveUntil(
             context,
-            UserPage.routeName,
+            UserScreen.routeName,
             (route) => false,
           );
         },

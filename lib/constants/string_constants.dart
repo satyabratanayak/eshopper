@@ -22,11 +22,12 @@ class StringConstants {
   static const error = 'ERROR';
   static const seeAll = 'See all';
   static const yourOrders = 'Your Orders';
+  static const pendingOrders = 'Pending Orders';
   static const logOut = 'Log Out';
   static const wishlist = 'Your Wishlist';
   static const applyForSeller = 'Apply for Seller';
   static const applyForBuyer = 'Apply for Buyer';
-  static const noOrders = 'You have no orders yet.';
+  static const noOrders = 'You have no orders. Place an order now!';
   static const flatBuilding = 'Flat, House no, Building';
   static const area = 'Area, Street';
   static const pincode = 'Pincode';

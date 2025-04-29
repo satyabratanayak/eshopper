@@ -1,6 +1,7 @@
 import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/account/services/account_services.dart';
 import 'package:eshopper/features/account/widgets/account_button.dart';
+import 'package:eshopper/features/order_details/screens/your_orders.dart';
 import 'package:flutter/material.dart';
 
 class TopButtons extends StatelessWidget {
@@ -14,7 +15,12 @@ class TopButtons extends StatelessWidget {
           children: [
             AccountButton(
               text: StringConstants.yourOrders,
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  YourOrdersScreen.routeName,
+                );
+              },
             ),
             AccountButton(
               text: StringConstants.applyForSeller,

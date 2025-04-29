@@ -15,72 +15,71 @@ class Orders extends StatefulWidget {
 
 class _OrdersState extends State<Orders> {
   List<Order>? orders;
+  List<Order> undeliveredOrders = [];
+
   final AccountServices accountServices = AccountServices();
 
   @override
   Widget build(BuildContext context) {
-    if (orders == null) {
-      return const Loader();
+    if (orders != null) {
+      undeliveredOrders = orders!.where((order) => order.status < 3).toList();
     }
 
-    if (orders!.isEmpty) {
-      return const Center(
-        child: Text(
-          StringConstants.noOrders,
-          style: TextStyle(fontSize: 16),
-        ),
-      );
-    }
-
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                StringConstants.yourOrders,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+    return orders == null
+        ? Loader()
+        : undeliveredOrders.isEmpty
+            ? Center(
+                child: Text(
+                  StringConstants.noOrders,
+                  style: TextStyle(fontSize: 16),
                 ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: List.generate(
-            orders!.length,
-            (index) {
-              final order = orders![index];
-              final products = order.products;
-              return GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    OrderDetailScreen.routeName,
-                    arguments: order,
-                  );
-                },
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width / 2 - 12,
-                  child: ProductCard(
-                    cardType: CardType.vertical,
-                    product: products[0],
-                    totalProducts: order.products.length.toDouble(),
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: const Text(
+                      StringConstants.pendingOrders,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: List.generate(
+                      undeliveredOrders.length,
+                      (index) {
+                        final order = undeliveredOrders[index];
+                        final products = order.products;
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              OrderDetailScreen.routeName,
+                              arguments: order,
+                            );
+                          },
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Container(
+                              margin: EdgeInsets.only(left: 10),
+                              width: MediaQuery.of(context).size.width / 2 - 12,
+                              child: ProductCard(
+                                cardType: CardType.vertical,
+                                product: products[0],
+                                totalProducts: order.products.length.toDouble(),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               );
-            },
-          ),
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
   }
 
   void fetchOrders() async {

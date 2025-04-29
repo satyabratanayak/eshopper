@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
       onGenerateRoute: (settings) => generateRoute(settings),
       home: user.token.isNotEmpty
           ? user.type == DBConstants.user
-              ? const UserPage()
+              ? const UserScreen()
               : const AdminScreen()
           : const AuthScreen(),
     );

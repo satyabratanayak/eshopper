@@ -6,6 +6,7 @@ import 'package:eshopper/features/auth/screens/auth_screen.dart';
 import 'package:eshopper/features/home/screens/category_deals_screen.dart';
 import 'package:eshopper/features/home/screens/home_screen.dart';
 import 'package:eshopper/features/order_details/screens/order_details.dart';
+import 'package:eshopper/features/order_details/screens/your_orders.dart';
 import 'package:eshopper/features/product_details/screens/product_details_screen.dart';
 import 'package:eshopper/features/search/screens/search_screen.dart';
 import 'package:eshopper/models/order.dart';
@@ -25,10 +26,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const HomeScreen(),
       );
-    case UserPage.routeName:
+    case UserScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const UserPage(),
+        builder: (_) => const UserScreen(),
       );
     case AddProductScreen.routeName:
       final product = routeSettings.arguments as Product?;
@@ -76,6 +77,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => OrderDetailScreen(
           order: order,
         ),
+      );
+    case YourOrdersScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => YourOrdersScreen(),
       );
     default:
       return MaterialPageRoute(

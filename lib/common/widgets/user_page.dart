@@ -7,15 +7,15 @@ import 'package:eshopper/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class UserPage extends StatefulWidget {
+class UserScreen extends StatefulWidget {
   static const String routeName = '/home-page';
-  const UserPage({super.key});
+  const UserScreen({super.key});
 
   @override
-  State<UserPage> createState() => _UserPageState();
+  State<UserScreen> createState() => _UserScreenState();
 }
 
-class _UserPageState extends State<UserPage> {
+class _UserScreenState extends State<UserScreen> {
   int _page = 0;
   double bottomBarWidth = 42;
   double bottomBarBorderWidth = 5;
