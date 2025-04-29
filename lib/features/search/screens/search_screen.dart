@@ -1,9 +1,10 @@
 import 'package:eshopper/common/widgets/custom_appbar.dart';
 import 'package:eshopper/common/widgets/loader.dart';
+import 'package:eshopper/common/widgets/product_card.dart';
+import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/home/widgets/address_box.dart';
 import 'package:eshopper/features/product_details/screens/product_details_screen.dart';
 import 'package:eshopper/features/search/services/search_services.dart';
-import 'package:eshopper/features/search/widget/searched_product.dart';
 import 'package:eshopper/models/product.dart';
 import 'package:flutter/material.dart';
 
@@ -29,31 +30,41 @@ class _SearchScreenState extends State<SearchScreen> {
       appBar: CustomAppBar(),
       body: products == null
           ? const Loader()
-          : Column(
-              children: [
-                const AddressBox(),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: products!.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            ProductDetailScreen.routeName,
-                            arguments: products![index],
+          : products!.isEmpty
+              ? Center(
+                  child: Text(
+                    StringConstants.noProducts,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                )
+              : Column(
+                  children: [
+                    const AddressBox(),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: products!.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                ProductDetailScreen.routeName,
+                                arguments: products![index],
+                              );
+                            },
+                            child: ProductCard(
+                              product: products![index],
+                              autoScroll: false,
+                              cardType: CardType.horizontal,
+                            ),
                           );
                         },
-                        child: SearchedProduct(
-                          product: products![index],
-                        ),
-                      );
-                    },
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
     );
   }
 

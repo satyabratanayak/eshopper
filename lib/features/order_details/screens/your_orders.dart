@@ -31,6 +31,7 @@ class _YourOrdersScreenState extends State<YourOrdersScreen> {
               ? const Center(
                   child: Text(
                     StringConstants.noOrders,
+                    textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16),
                   ),
                 )

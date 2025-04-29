@@ -91,4 +91,6 @@ class StringConstants {
   static const done = 'Done';
   static const purchaseDetails = 'Purchase Details';
   static const dealPrice = 'Deal Price: ';
+  static const noProducts =
+      'No such products found.\nTry searching with some other keyword.';
 }

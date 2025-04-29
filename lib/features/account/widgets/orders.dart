@@ -31,6 +31,7 @@ class _OrdersState extends State<Orders> {
             ? Center(
                 child: Text(
                   StringConstants.noOrders,
+                  textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16),
                 ),
               )
