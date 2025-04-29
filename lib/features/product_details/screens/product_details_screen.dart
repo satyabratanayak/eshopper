@@ -1,11 +1,16 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eshopper/common/widgets/app_network_image.dart';
+import 'package:eshopper/common/widgets/custom_appbar.dart';
 import 'package:eshopper/common/widgets/custom_button.dart';
 import 'package:eshopper/common/widgets/star_ratings.dart';
 import 'package:eshopper/constants/global_variables.dart';
 import 'package:eshopper/constants/string_constants.dart';
+import 'package:eshopper/features/account/services/account_services.dart';
 import 'package:eshopper/features/product_details/services/product_details_services.dart';
 import 'package:eshopper/features/search/screens/search_screen.dart';
+import 'package:eshopper/models/order.dart';
 import 'package:eshopper/models/product.dart';
 import 'package:eshopper/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +30,8 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  final AccountServices accountServices = AccountServices();
+  List<Order>? orders;
   final ProductDetailsServices productDetailsServices =
       ProductDetailsServices();
   double avgRating = 0;
@@ -41,52 +48,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
+    log("FINDER: ${user.type == DBConstants.user} && ${isProductOrdered()}");
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: AppBar(
-          flexibleSpace: Container(
-            decoration:
-                const BoxDecoration(gradient: GlobalVariables.appBarGradient),
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Material(
-                  borderRadius: BorderRadius.circular(7),
-                  elevation: 1,
-                  child: TextFormField(
-                    onFieldSubmitted: navigateToSearchScreen,
-                    decoration: InputDecoration(
-                      prefixIcon: InkWell(
-                        onTap: () {},
-                        child: Icon(
-                          Icons.search,
-                          color: Colors.black,
-                          size: 24,
-                        ),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.only(top: 10),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(7)),
-                        borderSide: BorderSide.none,
-                      ),
-                      hintText: StringConstants.search,
-                      hintStyle: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -292,36 +257,38 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 color: GlobalVariables.secondaryColor,
                 isEnabled: widget.product.quantity.toInt() != 0,
               ),
-              Divider(),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child: Text(
-                  StringConstants.rateProduct,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+              if (user.type == DBConstants.user && isProductOrdered()) ...[
+                Divider(),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text(
+                    StringConstants.rateProduct,
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              RatingBar.builder(
-                initialRating: myRating,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemPadding: const EdgeInsets.symmetric(horizontal: 4),
-                itemBuilder: (context, _) => const Icon(
-                  Icons.star,
-                  color: GlobalVariables.secondaryColor,
+                RatingBar.builder(
+                  initialRating: myRating,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 4),
+                  itemBuilder: (context, _) => const Icon(
+                    Icons.star,
+                    color: GlobalVariables.secondaryColor,
+                  ),
+                  onRatingUpdate: (rating) {
+                    productDetailsServices.rateProduct(
+                      context: context,
+                      product: widget.product,
+                      rating: rating,
+                    );
+                  },
                 ),
-                onRatingUpdate: (rating) {
-                  productDetailsServices.rateProduct(
-                    context: context,
-                    product: widget.product,
-                    rating: rating,
-                  );
-                },
-              )
+              ]
             ],
           ),
         ),
@@ -346,6 +313,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
 
     setOfferPercent();
+    fetchOrders();
+  }
+
+  void fetchOrders() async {
+    orders = await accountServices.fetchMyOrders(context: context);
+    setState(() {});
   }
 
   void setOfferPercent() {
@@ -362,6 +335,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
+  }
+
+  bool isProductOrdered() {
+    final myOrder = orders;
+    if (myOrder != null && myOrder.isNotEmpty) {
+      for (final order in myOrder) {
+        for (final orderedProduct in order.products) {
+          if (orderedProduct.id == widget.product.id) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
   }
 }
 
