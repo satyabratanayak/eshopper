@@ -5,7 +5,8 @@ const adminRouter = require("./routes/admin");
 // IMPORTS FROM OTHER FILES
 const authRouter = require("./routes/auth");
 const productRouter = require("./routes/product");
-const userRouter = require("./routes/user");
+const userRouter = require("./routes/Users/user");
+const wishlistRouter = require("./routes/Users/wishlist");
 
 // INIT
 const PORT = process.env.PORT || 5001;
@@ -19,6 +20,7 @@ app.use(authRouter);
 app.use(adminRouter);
 app.use(productRouter);
 app.use(userRouter);
+app.use(wishlistRouter);
 
 // Connections
 mongoose.connect(DB).then(() => {
