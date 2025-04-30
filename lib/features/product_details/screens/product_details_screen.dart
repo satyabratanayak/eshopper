@@ -215,10 +215,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ],
                 ),
               ),
-              Text(
-                StringConstants.extraForShipping,
-                style: const TextStyle(fontSize: 12),
-              ),
+              if (widget.product.price < 150)
+                Text(
+                  StringConstants.extraForShipping,
+                  style: const TextStyle(fontSize: 12),
+                ),
               _Divider(),
               Text(
                 StringConstants.productDescription,

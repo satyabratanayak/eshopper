@@ -97,4 +97,6 @@ class StringConstants {
   static const dealPrice = 'Deal Price: ';
   static const noProducts =
       'No such products found.\nTry searching with some other keyword.';
+  static const noProductsInCategory =
+      'No products found in this category.\nTry browsing other categories instead.';
 }
