@@ -9,27 +9,60 @@ class CategoryProductsChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (salesData.isEmpty) {
+      return const Center(child: Text('No sales data available.'));
+    }
+
     return BarChart(
       BarChartData(
         alignment: BarChartAlignment.spaceAround,
         maxY: _getMaxY(),
-        barTouchData: BarTouchData(enabled: true),
+        groupsSpace: 12,
+        barTouchData: BarTouchData(
+          enabled: true,
+          touchTooltipData: BarTouchTooltipData(
+            getTooltipItem: (group, groupIndex, rod, rodIndex) {
+              return BarTooltipItem(
+                '${salesData[group.x.toInt()].label}\n₹${rod.toY.toStringAsFixed(0)}',
+                const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              );
+            },
+          ),
+        ),
         titlesData: FlTitlesData(
-          leftTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: true),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 40,
+              getTitlesWidget: (value, meta) {
+                return Text(
+                  value.toInt().toString(),
+                  style: const TextStyle(fontSize: 10),
+                );
+              },
+            ),
           ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
+              reservedSize: 42,
               getTitlesWidget: (value, meta) {
-                int index = value.toInt();
-                if (index >= 0 && index < salesData.length) {
-                  return Text(
+                final index = value.toInt();
+                if (index < 0 || index >= salesData.length) {
+                  return const SizedBox.shrink();
+                }
+
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
                     salesData[index].label,
                     style: const TextStyle(fontSize: 10),
-                  );
-                }
-                return const Text('');
+                  ),
+                );
               },
             ),
           ),
@@ -38,24 +71,37 @@ class CategoryProductsChart extends StatelessWidget {
           rightTitles:
               const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
-        borderData: FlBorderData(show: false),
+        borderData: FlBorderData(
+          show: true,
+          border: const Border(
+            left: BorderSide(color: Colors.black12),
+            bottom: BorderSide(color: Colors.black12),
+          ),
+        ),
         barGroups: salesData.asMap().entries.map((entry) {
-          int index = entry.key;
-          Sales sale = entry.value;
-          return BarChartGroupData(x: index, barRods: [
-            BarChartRodData(toY: sale.earning.toDouble(), width: 16),
-          ]);
+          final index = entry.key;
+          final sale = entry.value;
+          final color = Colors.primaries[index % Colors.primaries.length];
+
+          return BarChartGroupData(
+            x: index,
+            barRods: [
+              BarChartRodData(
+                toY: sale.earning.toDouble(),
+                width: 20,
+                color: color,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ],
+          );
         }).toList(),
       ),
     );
   }
 
   double _getMaxY() {
-    if (salesData.isEmpty) return 10;
-    return salesData
-            .map((s) => s.earning)
-            .reduce((a, b) => a > b ? a : b)
-            .toDouble() +
-        10;
+    final max =
+        salesData.map((s) => s.earning).fold<int>(0, (a, b) => a > b ? a : b);
+    return max.ceil().toDouble();
   }
 }
