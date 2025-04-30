@@ -30,6 +30,8 @@ class StringConstants {
   static const applyForBuyer = 'Apply for Buyer';
   static const zeroOrders = 'You have no orders.';
   static const noOrders = 'You have no orders. Place an order now!';
+  static const noWishlist =
+      'You currently have no wishlisted items.\nBrowse and add to your wishlist now!';
   static const flatBuilding = 'Flat, House no, Building';
   static const area = 'Area, Street';
   static const pincode = 'Pincode';

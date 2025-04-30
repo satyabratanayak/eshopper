@@ -2,10 +2,10 @@ import 'package:eshopper/common/widgets/custom_appbar.dart';
 import 'package:eshopper/common/widgets/loader.dart';
 import 'package:eshopper/common/widgets/product_card.dart';
 import 'package:eshopper/constants/string_constants.dart';
-import 'package:eshopper/features/account/services/account_services.dart';
-import 'package:eshopper/features/order_details/screens/order_details.dart';
+import 'package:eshopper/features/product_details/screens/product_details_screen.dart';
 import 'package:eshopper/features/search/screens/search_screen.dart';
-import 'package:eshopper/models/order.dart';
+import 'package:eshopper/features/wishlist/services/wishlist_services.dart';
+import 'package:eshopper/models/product.dart';
 import 'package:flutter/material.dart';
 
 class Wishlist extends StatefulWidget {
@@ -17,20 +17,20 @@ class Wishlist extends StatefulWidget {
 }
 
 class WishlistState extends State<Wishlist> {
-  final AccountServices accountServices = AccountServices();
-  List<Order>? orders;
+  final WishlistServices wishlistServices = WishlistServices();
+  List<Product>? wishlist;
 
   @override
   Widget build(BuildContext context) {
-    final currentOrders = orders;
+    final currentWishlist = wishlist;
     return Scaffold(
       appBar: CustomAppBar(),
-      body: currentOrders == null
+      body: currentWishlist == null
           ? const Loader()
-          : currentOrders.isEmpty
+          : currentWishlist.isEmpty
               ? const Center(
                   child: Text(
-                    StringConstants.noOrders,
+                    StringConstants.noWishlist,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16),
                   ),
@@ -53,14 +53,14 @@ class WishlistState extends State<Wishlist> {
                         spacing: 8,
                         runSpacing: 8,
                         children: List.generate(
-                          currentOrders.length,
+                          currentWishlist.length,
                           (index) {
-                            final orderData = currentOrders[index];
+                            final orderData = currentWishlist[index];
                             return GestureDetector(
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,
-                                  OrderDetailScreen.routeName,
+                                  ProductDetailScreen.routeName,
                                   arguments: orderData,
                                 );
                               },
@@ -69,9 +69,7 @@ class WishlistState extends State<Wishlist> {
                                     MediaQuery.of(context).size.width / 2 - 12,
                                 child: ProductCard(
                                   cardType: CardType.vertical,
-                                  product: orderData.products[0],
-                                  totalProducts:
-                                      orderData.products.length.toDouble(),
+                                  product: orderData,
                                 ),
                               ),
                             );
@@ -84,8 +82,8 @@ class WishlistState extends State<Wishlist> {
     );
   }
 
-  void fetchOrders() async {
-    orders = await accountServices.fetchMyOrders(context: context);
+  void fetchWishlist() async {
+    wishlist = await wishlistServices.fetchMyWishlist(context: context);
     setState(() {});
   }
 
@@ -96,6 +94,6 @@ class WishlistState extends State<Wishlist> {
   @override
   void initState() {
     super.initState();
-    fetchOrders();
+    fetchWishlist();
   }
 }

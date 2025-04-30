@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eshopper/common/widgets/app_network_image.dart';
 import 'package:eshopper/common/widgets/custom_appbar.dart';
@@ -10,6 +8,7 @@ import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/account/services/account_services.dart';
 import 'package:eshopper/features/product_details/services/product_details_services.dart';
 import 'package:eshopper/features/search/screens/search_screen.dart';
+import 'package:eshopper/features/wishlist/services/wishlist_services.dart';
 import 'package:eshopper/models/order.dart';
 import 'package:eshopper/models/product.dart';
 import 'package:eshopper/providers/user_provider.dart';
@@ -38,6 +37,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   double myRating = 0;
   int _current = 0;
   double offerPercent = 0.0;
+  bool isWishlisted = false;
 
   void addToCart() {
     productDetailsServices.addToCart(
@@ -49,7 +49,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
-    log("FINDER: ${user.type == DBConstants.user} && ${isProductOrdered()}");
+
     return Scaffold(
       appBar: CustomAppBar(),
       body: SingleChildScrollView(
@@ -147,24 +147,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       bottom: 3,
                       right: 20,
                       child: IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.favorite,
-                          color: Colors.grey,
+                          color: isWishlisted ? Colors.red : Colors.grey,
                           size: 30,
                         ),
                         onPressed: () {
-                          // TODO: Add wishlist service
-                          // productDetailsServices.addToWishlist(
-                          //   context: context,
-                          //   product: widget.product,
-                          // );
+                          isWishlisted ? removeFromWishlist() : addToWishlist();
+                          setState(() {
+                            isWishlisted = !isWishlisted;
+                          });
                         },
                       ),
                     ),
                   ],
                 ),
               ),
-              Divider(),
+              _Divider(),
               Container(
                 margin: const EdgeInsets.only(bottom: 10),
                 padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
@@ -216,7 +215,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ],
                 ),
               ),
-              Divider(),
+              Text(
+                StringConstants.extraForShipping,
+                style: const TextStyle(fontSize: 12),
+              ),
+              _Divider(),
               Text(
                 StringConstants.productDescription,
                 style: const TextStyle(
@@ -225,7 +228,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               Text(widget.product.description),
-              Divider(),
+              _Divider(),
               widget.product.quantity.toInt() == 0
                   ? Text(
                       StringConstants.outOfStock,
@@ -258,7 +261,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 isEnabled: widget.product.quantity.toInt() != 0,
               ),
               if (user.type == DBConstants.user && isProductOrdered()) ...[
-                Divider(),
+                _Divider(),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
                   child: Text(
@@ -312,6 +315,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       avgRating = totalRating / widget.product.rating.length;
     }
 
+    checkWishlist();
     setOfferPercent();
     fetchOrders();
   }
@@ -319,6 +323,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void fetchOrders() async {
     orders = await accountServices.fetchMyOrders(context: context);
     setState(() {});
+  }
+
+  void checkWishlist() async {
+    isWishlisted = await WishlistServices().isProductInWishlist(
+      context: context,
+      productId: widget.product.id,
+    );
+  }
+
+  void addToWishlist() async {
+    await WishlistServices().addToWishlist(
+      context: context,
+      productId: widget.product.id,
+    );
+  }
+
+  void removeFromWishlist() async {
+    await WishlistServices().removeFromWishlist(
+      context: context,
+      productId: widget.product.id,
+    );
   }
 
   void setOfferPercent() {
@@ -353,11 +378,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 }
 
-class Divider extends StatelessWidget {
-  const Divider({
-    super.key,
-  });
-
+class _Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
