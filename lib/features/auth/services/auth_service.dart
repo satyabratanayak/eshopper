@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:eshopper/common/widgets/user_page.dart';
 import 'package:eshopper/constants/error_handling.dart';
@@ -47,6 +48,55 @@ class AuthService {
       }
     } catch (e) {
       showGlobalSnackBar(e.toString());
+    }
+  }
+
+  // get otp
+  void getOtp(
+    BuildContext context, {
+    required String email,
+  }) async {
+    try {
+      log('Requesting OTP from ${'$uri/api/signup/getotp'}');
+
+      var tokenRes = await http.post(
+        Uri.parse('$uri/api/signup/getotp'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'email': email}),
+      );
+
+      var response = jsonDecode(tokenRes.body);
+      log("Logger: $response");
+    } catch (e) {
+      showGlobalSnackBar(e.toString());
+    }
+  }
+
+  // get otp
+  Future<bool> verifyOtp(
+    BuildContext context, {
+    required String email,
+    required String otp,
+  }) async {
+    try {
+      var tokenRes = await http.post(
+        Uri.parse('$uri/api/signup/verifyotp'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': email,
+          'otp': otp,
+        }),
+      );
+      var response = jsonDecode(tokenRes.body);
+      final result = response['status'] as bool?;
+      return result ?? false;
+    } catch (e) {
+      showGlobalSnackBar(e.toString());
+      return false;
     }
   }
 

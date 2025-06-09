@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:eshopper/common/widgets/user_page.dart';
 import 'package:eshopper/constants/global_variables.dart';
 import 'package:eshopper/constants/string_constants.dart';
@@ -36,6 +38,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
+    log("User Token: ${user.token}");
     return MaterialApp(
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,

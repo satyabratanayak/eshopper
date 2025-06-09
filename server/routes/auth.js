@@ -4,6 +4,11 @@ const bcryptjs = require("bcryptjs");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const auth = require("../middlewares/auth");
+const nodemailer = require("nodemailer");
+
+// Temporary in-memory store for OTPs
+const otpStore = {}; // Format: { "user@example.com": { otp: "123456", expiresAt: timestamp } }
+
 
 // SIGN UP
 authRouter.post("/api/signup", async (req, res) => {
@@ -76,33 +81,71 @@ authRouter.get("/", auth, async (req, res) => {
   const user = await User.findById(req.user);
   res.json({ ...user._doc, token: req.token });
 });
-// get OTP
-authRouter.get("/api/signup/getotp", auth, async (req, res) => {
-  const {email, otp } = req.body;
 
-  // POC  d
-  // send otp
-  // verify otp
-  // Send response
-  //  const response =  {
-  //     "status": true
-  //   }
-  const user = await User.findById(req.user);
-  res.json({ ...user._doc, token: req.token });
-});
-// verify OTP
-authRouter.get("/api/signup/verifyotp", auth, async (req, res) => {
-  const {email, otp } = req.body;
+authRouter.post("/api/signup/getotp", async (req, res) => {
+  const { email } = req.body;
 
-  // POC  d
-  // send otp
-  // verify otp
-  // Send response
-  //  const response =  {
-  //     "status": true
-  //   }
-  const user = await User.findById(req.user);
-  res.json({ ...user._doc, token: req.token });
+  if (!email) {
+    return res.status(400).json({ status: false, msg: "Email is required" });
+  }
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+  const expiresAt = Date.now() + 5 * 60 * 1000; // valid for 5 minutes
+
+  otpStore[email] = { otp, expiresAt };
+
+  // Send email
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "satyabratanayak.14038@gmail.com",
+        pass: "tqiq ovjq fejw mztk",
+      },
+    });
+
+    await transporter.sendMail({
+      from: '"Eshopper App" contact@eshopper.com',
+      to: email,
+      subject: "Eshopper Login OTP Code",
+      text: `Your OTP code for Eshopper is ${otp}. This OTP will be valid for next 5 min`,
+    });
+
+    res.json({ status: true, msg: "OTP sent" });
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    res.json({ status: false, msg: "OTP not sent" });
+  }
 });
+
+
+
+authRouter.post("/api/signup/verifyotp", async (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    return res.status(400).json({ status: false, msg: "Email and OTP are required" });
+  }
+
+  const saved = otpStore[email];
+
+  if (!saved) {
+    return res.json({ status: false, msg: "OTP invalid" });
+  }
+
+  if (Date.now() > saved.expiresAt) {
+    delete otpStore[email];
+    return res.json({ status: false, msg: "OTP expired" });
+  }
+
+  if (saved.otp !== otp) {
+    return res.json({ status: false, msg: "OTP invalid" });
+  }
+
+  // delete otpStore[email]; // OTP used
+  res.json({ status: true, msg: "OTP valid" });
+});
+
 
 module.exports = authRouter;
+

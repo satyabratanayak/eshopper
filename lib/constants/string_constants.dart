@@ -13,6 +13,9 @@ class DBConstants {
 
 class StringConstants {
   static const appName = 'Eshopper';
+  static const enterOtptext = 'Enter Otp';
+  static const getOtptext = 'Get Otp';
+  static const verifyOtp = 'Verify Otp';
   static const errorScreenMessage = 'Screen does not exist!';
   static const enterYour = 'Enter your';
   static const hello = 'Hello, ';

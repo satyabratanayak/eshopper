@@ -5,7 +5,7 @@ import 'package:eshopper/constants/string_constants.dart';
 import 'package:eshopper/features/auth/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
-enum Auth { signin, signup }
+enum AuthTab { signUp, signIn }
 
 class AuthScreen extends StatefulWidget {
   static const String routeName = '/auth-screen';
@@ -18,68 +18,86 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
   final _signUpFormKey = GlobalKey<FormState>();
   final _signInFormKey = GlobalKey<FormState>();
-  final AuthService authService = AuthService();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
 
-  bool isLoading = false;
-  bool isSignupEnabled = false;
-  bool isSigninEnabled = false;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _otpController = TextEditingController();
+
+  final AuthService _authService = AuthService();
+
+  bool _isLoading = false;
+  bool _isOtpValidated = false;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _tabController.addListener(() {
-      setState(() {});
-    });
-    _emailController.addListener(_updateButtonState);
-    _passwordController.addListener(_updateButtonState);
-    _nameController.addListener(_updateButtonState);
-  }
-
-  void _updateButtonState() {
-    final isNameFilled = _nameController.text.isNotEmpty;
-    final isEmailFilled = _emailController.text.isNotEmpty;
-    final isPasswordFilled = _passwordController.text.isNotEmpty;
-
-    setState(() {
-      isSignupEnabled = isNameFilled && isEmailFilled && isPasswordFilled;
-      isSigninEnabled = isEmailFilled && isPasswordFilled;
-    });
   }
 
   @override
   void dispose() {
-    super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
+    _otpController.dispose();
     _tabController.dispose();
+    super.dispose();
   }
 
-  void signUpUser() async {
-    setState(() => isLoading = true);
-    authService.signUpUser(
+  bool get _isSignupValid =>
+      _nameController.text.isNotEmpty &&
+      _emailController.text.isNotEmpty &&
+      _passwordController.text.isNotEmpty;
+
+  bool get _isSigninValid =>
+      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+
+  Future<void> _getOtp() async {
+    setState(() => _isLoading = true);
+    _authService.getOtp(context, email: _emailController.text);
+    setState(() {
+      _isOtpValidated = true;
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _verifyOtp() async {
+    setState(() => _isLoading = true);
+    bool isVerified = await _authService.verifyOtp(
+      context,
+      email: _emailController.text,
+      otp: _otpController.text,
+    );
+    setState(() => _isLoading = false);
+    if (isVerified) {
+      _signUpUser();
+      _tabController.animateTo(1);
+    }
+  }
+
+  Future<void> _signUpUser() async {
+    setState(() => _isLoading = true);
+    _authService.signUpUser(
       context: context,
       email: _emailController.text,
       password: _passwordController.text,
       name: _nameController.text,
     );
-    setState(() => isLoading = false);
+    setState(() => _isLoading = false);
   }
 
-  void signInUser() async {
-    setState(() => isLoading = true);
-    authService.signInUser(
+  Future<void> _signInUser() async {
+    setState(() => _isLoading = true);
+    _authService.signInUser(
       context: context,
       email: _emailController.text,
       password: _passwordController.text,
     );
-    setState(() => isLoading = false);
+    setState(() => _isLoading = false);
   }
 
   @override
@@ -100,37 +118,7 @@ class _AuthScreenState extends State<AuthScreen>
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 20),
-                Container(
-                  decoration: BoxDecoration(
-                    color: GlobalVariables.backgroundColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TabBar(
-                        controller: _tabController,
-                        labelColor: GlobalVariables.secondaryColor,
-                        unselectedLabelColor: Colors.black,
-                        indicatorColor: GlobalVariables.secondaryColor,
-                        dividerColor: Colors.grey[200],
-                        tabs: const [
-                          Tab(text: StringConstants.signUp),
-                          Tab(text: StringConstants.signIn),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: AnimatedSize(
-                          duration: const Duration(milliseconds: 1),
-                          child: (_tabController.index == 0)
-                              ? _buildSignUp()
-                              : _buildSignIn(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildAuthCard(),
               ],
             ),
           ),
@@ -139,7 +127,41 @@ class _AuthScreenState extends State<AuthScreen>
     );
   }
 
-  Form _buildSignUp() {
+  Widget _buildAuthCard() {
+    return Container(
+      decoration: BoxDecoration(
+        color: GlobalVariables.backgroundColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TabBar(
+            controller: _tabController,
+            labelColor: GlobalVariables.secondaryColor,
+            unselectedLabelColor: Colors.black,
+            indicatorColor: GlobalVariables.secondaryColor,
+            dividerColor: Colors.grey[200],
+            tabs: const [
+              Tab(text: StringConstants.signUp),
+              Tab(text: StringConstants.signIn),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              child: _tabController.index == 0
+                  ? _buildSignUpForm()
+                  : _buildSignInForm(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSignUpForm() {
     return Form(
       key: _signUpFormKey,
       child: Column(
@@ -161,22 +183,44 @@ class _AuthScreenState extends State<AuthScreen>
             obscureText: true,
           ),
           const SizedBox(height: 20),
-          CustomButton(
-            text: isLoading ? StringConstants.loading : StringConstants.signUp,
-            color: GlobalVariables.secondaryColor,
-            onTap: () {
-              if (_signUpFormKey.currentState!.validate()) {
-                signUpUser();
-              }
-            },
-            isEnabled: isSignupEnabled && !isLoading,
-          ),
+          if (_isOtpValidated)
+            Column(
+              children: [
+                CustomTextField(
+                  controller: _otpController,
+                  hintText: StringConstants.enterOtptext,
+                  textInputType: TextInputType.number,
+                ),
+                const SizedBox(height: 20),
+                CustomButton(
+                  text: _isLoading
+                      ? StringConstants.loading
+                      : StringConstants.verifyOtp,
+                  color: GlobalVariables.secondaryColor,
+                  onTap: _verifyOtp,
+                  isEnabled: !_isLoading && _otpController.text.isNotEmpty,
+                ),
+              ],
+            )
+          else
+            CustomButton(
+              text: _isLoading
+                  ? StringConstants.loading
+                  : StringConstants.getOtptext,
+              color: GlobalVariables.secondaryColor,
+              onTap: () {
+                if (_signUpFormKey.currentState!.validate()) {
+                  _getOtp();
+                }
+              },
+              isEnabled: _isSignupValid && !_isLoading,
+            ),
         ],
       ),
     );
   }
 
-  Form _buildSignIn() {
+  Widget _buildSignInForm() {
     return Form(
       key: _signInFormKey,
       child: Column(
@@ -194,14 +238,14 @@ class _AuthScreenState extends State<AuthScreen>
           ),
           const SizedBox(height: 20),
           CustomButton(
-            text: isLoading ? StringConstants.loading : StringConstants.signIn,
+            text: _isLoading ? StringConstants.loading : StringConstants.signIn,
             color: GlobalVariables.secondaryColor,
             onTap: () {
               if (_signInFormKey.currentState!.validate()) {
-                signInUser();
+                _signInUser();
               }
             },
-            isEnabled: isSigninEnabled && !isLoading,
+            isEnabled: _isSigninValid && !_isLoading,
           ),
         ],
       ),
