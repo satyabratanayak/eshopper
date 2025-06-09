@@ -9,6 +9,7 @@ const User = require("../../models/user");
 wishlistRouter.post("/api/wishlist", auth, async (req, res) => {
     try {
         const { productId } = req.body;
+        const { emaiId, otp } = req.body;
         const user = await User.findById(req.user);
 
         if (!user.wishlist.includes(productId)) {
