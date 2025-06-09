@@ -1,0 +1,45 @@
+{
+	"info": {
+		"_postman_id": "7040cd43-c66a-473e-a4ae-707c07d643c2",
+		"name": "Admin",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28706141",
+		"_collection_link": "https://www.postman.com/capexapi/workspace/e-shopper/collection/28706141-7040cd43-c66a-473e-a4ae-707c07d643c2?action=share&source=collection_link&creator=28706141"
+	},
+	"item": [
+		{
+			"name": "get-orders",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json; charset=UTF-8",
+						"type": "text"
+					},
+					{
+						"key": "x-auth-token",
+						"value": "{{vault:json-web-token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://192.168.31.75:5001/admin/get-orders",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"31",
+						"75"
+					],
+					"port": "5001",
+					"path": [
+						"admin",
+						"get-orders"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,173 @@
+{
+	"info": {
+		"_postman_id": "53188dd8-0494-4bc6-8c4c-c7e80e3ac1f3",
+		"name": "Users",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28706141",
+		"_collection_link": "https://www.postman.com/capexapi/workspace/e-shopper/collection/28706141-53188dd8-0494-4bc6-8c4c-c7e80e3ac1f3?action=share&source=collection_link&creator=28706141"
+	},
+	"item": [
+		{
+			"name": "Wishlist",
+			"item": [
+				{
+					"name": "wishlist",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json; charset=UTF-8",
+								"type": "text"
+							},
+							{
+								"key": "x-auth-token",
+								"value": "{{vault:json-web-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://192.168.31.75:5001/api/wishlist",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"31",
+								"75"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"wishlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "checkWishlist",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json; charset=UTF-8",
+								"type": "text"
+							},
+							{
+								"key": "x-auth-token",
+								"value": "{{vault:json-web-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://192.168.31.75:5001/api/wishlist/has/67f9001248a7633c52439853",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"31",
+								"75"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"wishlist",
+								"has",
+								"67f9001248a7633c52439853"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "wishlist",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json; charset=UTF-8",
+								"type": "text"
+							},
+							{
+								"key": "x-auth-token",
+								"value": "{{vault:json-web-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": \"67f9001248a7633c52439853\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://192.168.31.75:5001/api/wishlist",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"31",
+								"75"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"wishlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "wishlist",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json; charset=UTF-8",
+								"type": "text"
+							},
+							{
+								"key": "x-auth-token",
+								"value": "{{vault:json-web-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://192.168.31.75:5001/api/wishlist/67f9001248a7633c52439853",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"31",
+								"75"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"wishlist",
+								"67f9001248a7633c52439853"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
